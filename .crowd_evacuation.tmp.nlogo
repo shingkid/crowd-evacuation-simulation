@@ -21,7 +21,7 @@ to setup
   draw-rectangle -14 -17 25 14 white ;draw center bridge
   draw-leftbridge
   draw-rightbridge
-  draw-rectangle -114 -31 228 80 gray  ;draw floating platform
+  draw-rectangle -110 -31 228 7 gray  ;draw floating platform
 end
 
 to create-blue1
