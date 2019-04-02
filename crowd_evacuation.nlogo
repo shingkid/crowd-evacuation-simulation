@@ -22,6 +22,64 @@ to setup
   draw-leftbridge
   draw-rightbridge
   draw-rectangle -114 -31 228 80 gray  ;draw floating platform
+  create-stairs1 ;create all left-facing stairs
+  create-stairs2 ;create all right-facing stairs
+end
+
+to create-stairs1
+  let xlist create-xlist4 119
+  let ylist create-ylist2 5 -4
+  (foreach xlist ylist [ [x y] ->
+    draw-rectangle x y 2 1 white
+    ])
+  set xlist create-xlist4 65
+  set ylist create-ylist2 5 -4
+  (foreach xlist ylist [ [x y] ->
+    draw-rectangle x y 2 1 white
+    ])
+  set xlist create-xlist4 -43
+  set ylist create-ylist2 5 -4
+  (foreach xlist ylist [ [x y] ->
+    draw-rectangle x y 2 1 white
+    ])
+  set xlist create-xlist4 -97
+  set ylist create-ylist2 5 -4
+  (foreach xlist ylist [ [x y] ->
+    draw-rectangle x y 2 1 white
+    ])
+  set xlist create-xlist4 -178
+  set ylist create-ylist2 5 -4
+  (foreach xlist ylist [ [x y] ->
+    draw-rectangle x y 2 1 white
+    ])
+end
+
+to create-stairs2
+  let xlist create-xlist5 173
+  let ylist create-ylist2 5 -4
+  (foreach xlist ylist [ [x y] ->
+    draw-rectangle x y 2 1 white
+    ])
+  set xlist create-xlist5 92
+  set ylist create-ylist2 5 -4
+  (foreach xlist ylist [ [x y] ->
+    draw-rectangle x y 2 1 white
+    ])
+  set xlist create-xlist5 38
+  set ylist create-ylist2 5 -4
+  (foreach xlist ylist [ [x y] ->
+    draw-rectangle x y 2 1 white
+    ])
+  set xlist create-xlist5 -70
+  set ylist create-ylist2 5 -4
+  (foreach xlist ylist [ [x y] ->
+    draw-rectangle x y 2 1 white
+    ])
+  set xlist create-xlist5 -124
+  set ylist create-ylist2 5 -4
+  (foreach xlist ylist [ [x y] ->
+    draw-rectangle x y 2 1 white
+    ])
 end
 
 to create-blue1
@@ -268,6 +326,14 @@ to create-green3
   (foreach ylist wlist [ [y w] ->
     draw-rectangle 202 y w 1 green
     ])
+end
+
+to-report create-xlist5 [input]
+  report n-values (5) [ [i] -> input - i * 1]
+end
+
+to-report create-xlist4 [input]
+  report n-values (5) [ [i] -> input + i * 1]
 end
 
 to-report create-xlist3 [input]
