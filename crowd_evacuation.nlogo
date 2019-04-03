@@ -30,6 +30,7 @@ to setup
   create-green3
   draw-rectangle -250 -9 500 8 gray
   draw-rectangle -14 -17 25 14 gray ;draw center bridge
+  draw-black
   draw-leftbridge
   draw-rightbridge
   draw-rectangle -114 -31 228 80 gray  ;draw floating platform
@@ -39,14 +40,116 @@ to setup
 end
 
 to go
-  ask turtles[
-;    if (any? patches with [pcolor = black])
-;    [
-;      set heading towards one-of patches with [pcolor = black]
-      fd 1
-;    ]
-  ]
+  move-normal
+;  follow-crowd
   tick
+end
+
+to move-normal
+  ask turtles[
+    let patchAhead patch-ahead 1
+    ifelse ( [pcolor] of patchAhead = grey)
+    [
+      fd 1
+    ]
+    [
+      let patchLeft patch-left-and-ahead 90 1
+      ifelse ( [pcolor] of patchLeft = grey)
+      [
+        face patchLeft
+        fd 1
+      ]
+      [
+        let patchRight patch-right-and-ahead 90 1
+        if ( [pcolor] of patchRight = grey)
+        [
+          face patchRight
+          fd 1
+        ]
+      ]
+    ]
+  ]
+end
+
+to follow-crowd
+  ask turtles[
+    let patchAhead patch-ahead 1
+    ifelse ( [pcolor] of patchAhead = grey)
+    [
+      fd 1
+    ]
+    [
+      let dice random 1
+;      print dice
+      ifelse (dice < 1)
+      [
+        rt 90
+      ]
+      [
+        lt 90
+      ]
+      ask patches in-cone 1 30
+      [
+        if (pcolor = grey)
+        [
+          ask myself
+          [
+            let closest-person min-one-of (other turtles) [distance myself]
+;            set heading closest-person
+            fd 1
+          ]
+        ]
+      ]
+    ]
+  ]
+end
+
+to draw-black
+  draw-rectangle -230 39 1 44 black
+  draw-rectangle -229 37 1 42 black
+  draw-rectangle -228 35 1 40 black
+  draw-rectangle -227 33 1 38 black
+  draw-rectangle -226 31 1 36 black
+  draw-rectangle -225 29 1 34 black
+  draw-rectangle -224 27 1 32 black
+  draw-rectangle -223 25 1 30 black
+  draw-rectangle -222 23 1 28 black
+  draw-rectangle -221 21 1 26 black
+  draw-rectangle -220 19 1 24 black
+  draw-rectangle -219 17 1 22 black
+  draw-rectangle -218 15 1 20 black
+  draw-rectangle -217 13 1 18 black
+  draw-rectangle -216 11 1 16 black
+  draw-rectangle -215 9 1 14 black
+  draw-rectangle -214 7 1 12 black
+  draw-rectangle -213 5 1 10 black
+  draw-rectangle -212 3 1 8 black
+  draw-rectangle -211 1 1 6 black
+  draw-rectangle -210 -1 1 4 black
+  draw-rectangle -209 -3 1 2 black
+  draw-rectangle 226 39 1 44 black
+  draw-rectangle 225 37 1 42 black
+  draw-rectangle 224 35 1 40 black
+  draw-rectangle 223 33 1 38 black
+  draw-rectangle 222 31 1 36 black
+  draw-rectangle 221 29 1 34 black
+  draw-rectangle 220 27 1 32 black
+  draw-rectangle 219 25 1 30 black
+  draw-rectangle 218 23 1 28 black
+  draw-rectangle 217 21 1 26 black
+  draw-rectangle 216 19 1 24 black
+  draw-rectangle 215 17 1 22 black
+  draw-rectangle 214 15 1 20 black
+  draw-rectangle 213 13 1 18 black
+  draw-rectangle 212 11 1 16 black
+  draw-rectangle 211 9 1 14 black
+  draw-rectangle 210 7 1 12 black
+  draw-rectangle 209 5 1 10 black
+  draw-rectangle 208 3 1 8 black
+  draw-rectangle 207 1 1 6 black
+  draw-rectangle 206 -1 1 4 black
+  draw-rectangle 205 -3 1 2 black
+
 end
 
 to create-stairs1
@@ -508,10 +611,10 @@ ticks
 1.0
 
 BUTTON
-56
-166
-122
-199
+35
+97
+101
+130
 NIL
 setup
 NIL
@@ -540,6 +643,17 @@ NIL
 NIL
 NIL
 1
+
+MONITOR
+68
+184
+160
+229
+Turtle Count
+count turtles
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
