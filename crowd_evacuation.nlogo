@@ -10,6 +10,7 @@ survivors-own[
 
 to setup
   ca
+  draw-rectangle -230 135 457 140 gray
   create-blue1
   create-blue2
   create-blue3
@@ -28,7 +29,7 @@ to setup
   create-green2
   create-green3
   draw-rectangle -250 -9 500 8 gray
-  draw-rectangle -14 -17 25 14 white ;draw center bridge
+  draw-rectangle -14 -17 25 14 gray ;draw center bridge
   draw-leftbridge
   draw-rightbridge
   draw-rectangle -114 -31 228 80 gray  ;draw floating platform
@@ -52,27 +53,27 @@ to create-stairs1
   let xlist create-xlist4 119
   let ylist create-ylist2 5 -4
   (foreach xlist ylist [ [x y] ->
-    draw-rectangle x y 2 1 white
+    draw-rectangle x y 2 1 gray
     ])
   set xlist create-xlist4 65
   set ylist create-ylist2 5 -4
   (foreach xlist ylist [ [x y] ->
-    draw-rectangle x y 2 1 white
+    draw-rectangle x y 2 1 gray
     ])
   set xlist create-xlist4 -43
   set ylist create-ylist2 5 -4
   (foreach xlist ylist [ [x y] ->
-    draw-rectangle x y 2 1 white
+    draw-rectangle x y 2 1 gray
     ])
   set xlist create-xlist4 -97
   set ylist create-ylist2 5 -4
   (foreach xlist ylist [ [x y] ->
-    draw-rectangle x y 2 1 white
+    draw-rectangle x y 2 1 gray
     ])
   set xlist create-xlist4 -178
   set ylist create-ylist2 5 -4
   (foreach xlist ylist [ [x y] ->
-    draw-rectangle x y 2 1 white
+    draw-rectangle x y 2 1 gray
     ])
 end
 
@@ -80,27 +81,27 @@ to create-stairs2
   let xlist create-xlist5 173
   let ylist create-ylist2 5 -4
   (foreach xlist ylist [ [x y] ->
-    draw-rectangle x y 2 1 white
+    draw-rectangle x y 2 1 gray
     ])
   set xlist create-xlist5 92
   set ylist create-ylist2 5 -4
   (foreach xlist ylist [ [x y] ->
-    draw-rectangle x y 2 1 white
+    draw-rectangle x y 2 1 gray
     ])
   set xlist create-xlist5 38
   set ylist create-ylist2 5 -4
   (foreach xlist ylist [ [x y] ->
-    draw-rectangle x y 2 1 white
+    draw-rectangle x y 2 1 gray
     ])
   set xlist create-xlist5 -70
   set ylist create-ylist2 5 -4
   (foreach xlist ylist [ [x y] ->
-    draw-rectangle x y 2 1 white
+    draw-rectangle x y 2 1 gray
     ])
   set xlist create-xlist5 -124
   set ylist create-ylist2 5 -4
   (foreach xlist ylist [ [x y] ->
-    draw-rectangle x y 2 1 white
+    draw-rectangle x y 2 1 gray
     ])
 end
 
@@ -467,7 +468,7 @@ to draw-leftbridge
   let xlist create-xlist2 -120
   let ylist create-ylist2 14 -17
   (foreach xlist ylist [ [x y] ->
-    draw-rectangle x y 25 1 white
+    draw-rectangle x y 25 1 gray
     ])
 end
 
@@ -475,7 +476,7 @@ to draw-rightbridge
   let xlist create-xlist3 94
   let ylist create-ylist2 14 -17
   (foreach xlist ylist [ [x y] ->
-    draw-rectangle x y 25 1 white
+    draw-rectangle x y 25 1 gray
     ])
 end
 @#$#@#$#@
