@@ -1,3 +1,13 @@
+breed [survivors survivor]
+
+survivors-own[
+  state
+  speed
+  knowledge
+  age
+  gender
+]
+
 to setup
   ca
   create-blue1
@@ -28,7 +38,13 @@ to setup
 end
 
 to go
-  ask turtles[forward 1]
+  ask turtles[
+;    if (any? patches with [pcolor = black])
+;    [
+;      set heading towards one-of patches with [pcolor = black]
+      fd 1
+;    ]
+  ]
   tick
 end
 
