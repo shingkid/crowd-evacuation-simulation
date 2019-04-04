@@ -40,10 +40,10 @@ to setup
   create-doors 1 [setxy -75 19 set shape "square" set color blue set heading 180]
   create-doors 1 [setxy -25 19 set shape "square" set color blue set heading 180]
   create-doors 1 [setxy 25 19 set shape "square" set color blue set heading 180]
-  ask patches [set distance1 [distance myself] of door 14178]
-  ask patches [set distance2 [distance myself] of door 14179]
-  ask patches [set distance3 [distance myself] of door 14180]
-  ask patches [set distance4 [distance myself] of door 14181]
+  ask patches [set distance1 [distance myself] of door 14467]
+  ask patches [set distance2 [distance myself] of door 14468]
+  ask patches [set distance3 [distance myself] of door 14469]
+  ask patches [set distance4 [distance myself] of door 14470]
   ;set goal
   ask survivors[
     let shortest min (list distance1 distance2 distance3 distance4)
