@@ -85,7 +85,7 @@ end
 
 to go
   spread-fire
-  ifelse behaviour = "normal"
+  ifelse behaviour = "smart"
   [ move-normal ]
   [ follow-crowd ]
   ; Compute force exerted by survivors on each patch
@@ -836,7 +836,7 @@ CHOOSER
 55
 behaviour
 behaviour
-"normal" "follow"
+"smart" "follow"
 0
 
 MONITOR
