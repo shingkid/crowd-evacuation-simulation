@@ -1,7 +1,22 @@
 globals [
-  count-of-escapee
-  fire-deaths
-  stampede-deaths
+  blue-escapees
+  cyan-escapees
+  yellow-escapees
+  red-escapees
+  beige-escapees
+  green-escapees
+  blue-fire-deaths
+  cyan-fire-deaths
+  yellow-fire-deaths
+  red-fire-deaths
+  beige-fire-deaths
+  green-fire-deaths
+  blue-stampede-deaths
+  cyan-stampede-deaths
+  yellow-stampede-deaths
+  red-stampede-deaths
+  beige-stampede-deaths
+  green-stampede-deaths
 ]
 breed [survivors survivor]
 breed[doors door]
@@ -92,7 +107,21 @@ to go
 
   ask survivors [
     if compute-force patch-here >= health [
-      set stampede-deaths stampede-deaths + 1
+      ifelse color = blue
+      [ set blue-stampede-deaths blue-stampede-deaths + 1]
+      [ ifelse color = cyan
+        [ set cyan-stampede-deaths cyan-stampede-deaths + 1 ]
+        [ ifelse color = yellow
+          [ set yellow-stampede-deaths yellow-stampede-deaths + 1 ]
+          [ ifelse color = red
+            [ set red-stampede-deaths red-stampede-deaths + 1 ]
+            [ ifelse color = 29
+              [ set beige-stampede-deaths beige-stampede-deaths + 1 ]
+              [ set green-stampede-deaths green-stampede-deaths + 1 ]
+            ]
+          ]
+        ]
+      ]
       die
     ]
  ]
@@ -121,7 +150,21 @@ to spread-fire
   ask survivors [
     ;; Kill survivors on patches which have caught fire
     if [ pcolor ] of patch-here = orange [
-      set fire-deaths fire-deaths + 1
+      ifelse color = blue
+      [ set blue-fire-deaths blue-fire-deaths + 1]
+      [ ifelse color = cyan
+        [ set cyan-fire-deaths cyan-fire-deaths + 1 ]
+        [ ifelse color = yellow
+          [ set yellow-fire-deaths yellow-fire-deaths + 1 ]
+          [ ifelse color = red
+            [ set red-fire-deaths red-fire-deaths + 1 ]
+            [ ifelse color = 29
+              [ set beige-fire-deaths beige-fire-deaths + 1 ]
+              [ set green-fire-deaths green-fire-deaths + 1 ]
+            ]
+          ]
+        ]
+      ]
       die
     ]
   ]
@@ -169,11 +212,23 @@ to move-normal
       if goal = 9 [set next-patch min-one-of neighbors [distance9]]
       if goal = 10 [set next-patch min-one-of neighbors [distance10]]
     ]
-    move-to next-patch
-;    face next-patch
-;    fd speed
+    repeat speed [ move-to next-patch ]
     if any? doors-here [
-      set count-of-escapee count-of-escapee + 1
+      ifelse color = blue
+      [ set blue-escapees blue-escapees + 1]
+      [ ifelse color = cyan
+        [ set cyan-escapees cyan-escapees + 1 ]
+        [ ifelse color = yellow
+          [ set yellow-escapees yellow-escapees + 1 ]
+          [ ifelse color = red
+            [ set red-escapees red-escapees + 1 ]
+            [ ifelse color = 29
+              [ set beige-escapees beige-escapees + 1 ]
+              [ set green-escapees green-escapees + 1 ]
+            ]
+          ]
+        ]
+      ]
       die
     ]
   ]
@@ -844,8 +899,8 @@ MONITOR
 153
 72
 198
-Escapees
-count-of-escapee
+Total Escapees
+blue-escapees + cyan-escapees + yellow-escapees + red-escapees + beige-escapees + green-escapees
 17
 1
 11
@@ -882,9 +937,9 @@ true
 "" ""
 PENS
 "Survivors" 1.0 0 -16777216 true "" "plot count survivors"
-"Escapees" 1.0 0 -7500403 true "" "plot count-of-escapee"
-"Stampede" 1.0 0 -2674135 true "" "plot stampede-deaths"
-"Fire-deaths" 1.0 0 -955883 true "" "plot fire-deaths"
+"Escapees" 1.0 0 -7500403 true "" "plot blue-escapees + cyan-escapees + yellow-escapees + red-escapees + beige-escapees + green-escapees"
+"Stampede" 1.0 0 -2674135 true "" "plot blue-stampede-deaths + cyan-stampede-deaths + yellow-stampede-deaths + red-stampede-deaths + beige-stampede-deaths + green-stampede-deaths"
+"Fire-deaths" 1.0 0 -955883 true "" "plot blue-fire-deaths + cyan-fire-deaths + yellow-fire-deaths + red-fire-deaths + beige-fire-deaths + green-fire-deaths"
 
 MONITOR
 5
@@ -892,7 +947,7 @@ MONITOR
 79
 252
 Fire victims
-fire-deaths
+blue-fire-deaths + cyan-fire-deaths + yellow-fire-deaths + red-fire-deaths + beige-fire-deaths + green-fire-deaths
 17
 1
 11
@@ -903,7 +958,7 @@ MONITOR
 196
 252
 Stampede victims
-stampede-deaths
+blue-stampede-deaths + cyan-stampede-deaths + yellow-stampede-deaths + red-stampede-deaths + beige-stampede-deaths + green-stampede-deaths
 17
 1
 11
@@ -935,6 +990,75 @@ count doors
 17
 1
 11
+
+PLOT
+7
+496
+252
+646
+Escapees by Color
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"blue" 1.0 0 -13345367 true "" "plot blue-escapees"
+"cyan" 1.0 0 -11221820 true "" "plot cyan-escapees"
+"yellow" 1.0 0 -1184463 true "" "plot yellow-escapees"
+"red" 1.0 0 -2674135 true "" "plot red-escapees"
+"beige" 1.0 0 -204336 true "" "plot beige-escapees"
+"green" 1.0 0 -10899396 true "" "plot green-escapees"
+
+PLOT
+7
+654
+249
+804
+Stampede victims by Color
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"blue" 1.0 0 -13345367 true "" "plot blue-stampede-deaths"
+"cyan" 1.0 0 -11221820 true "" "plot cyan-stampede-deaths"
+"yellow" 1.0 0 -1184463 true "" "plot yellow-stampede-deaths"
+"red" 1.0 0 -2674135 true "" "plot red-stampede-deaths"
+"beige" 1.0 0 -204336 true "" "plot beige-stampede-deaths"
+"green" 1.0 0 -10899396 true "" "plot green-stampede-deaths"
+
+PLOT
+6
+812
+249
+962
+Fire victims by Color
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"blue" 1.0 0 -13345367 true "" "plot blue-fire-deaths"
+"cyan" 1.0 0 -11221820 true "" "plot cyan-fire-deaths"
+"red" 1.0 0 -2674135 true "" "plot red-fire-deaths"
+"yellow" 1.0 0 -1184463 true "" "plot yellow-fire-deaths"
+"beige" 1.0 0 -204336 true "" "plot beige-fire-deaths"
+"green" 1.0 0 -10899396 true "" "plot green-fire-deaths"
 
 @#$#@#$#@
 ## WHAT IS IT?
