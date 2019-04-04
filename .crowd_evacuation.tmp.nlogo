@@ -1,4 +1,8 @@
-globals[countofalive]
+globals [
+  countofalive
+  fire-deaths
+  stampede-deaths
+]
 breed [survivors survivor]
 breed[doors door]
 patches-own [
@@ -7,23 +11,21 @@ patches-own [
   distance2
   distance3
   distance4
-  distance5
-  distance6
-  distance7
-  distance8
-  distance9
-  distance10
+  force-0
+  force-90
+  force-180
+  force-270
 ]
 
-survivors-own[
+survivors-own [
   goal
-  health
-  mobility
-  speed
-  vision
+  speed  ; impacted by status and patch pressure (sum surrounding patch pressure)
+  vision ;
   gender
   age
-  reaction-time
+  mass
+  panic
+;  reaction-time
 ;  collaboration
 ;  insistence
   knowledge
@@ -40,27 +42,15 @@ to setup
   ask patches [set distance2 [distance myself] of door 14179]
   ask patches [set distance3 [distance myself] of door 14180]
   ask patches [set distance4 [distance myself] of door 14181]
-  ask patches [set distance5 [distance myself] of door 14182]
-  ask patches [set distance6 [distance myself] of door 14183]
-  ask patches [set distance7 [distance myself] of door 14184]
-  ask patches [set distance8 [distance myself] of door 14185]
-  ask patches [set distance9 [distance myself] of door 14186]
-  ask patches [set distance10 [distance myself] of door 14187]
   ;set goal
   ask survivors[
-    let shortest min (list distance1 distance2 distance3 distance4 )
+    let shortest min (list distance1 distance2 distance3 distance4)
     if shortest = distance1 [set goal 1]
     if shortest = distance2 [set goal 2]
     if shortest = distance3 [set goal 3]
     if shortest = distance4 [set goal 4]
-    if shortest = distance4 [set goal 5]
-    if shortest = distance4 [set goal 6]
-    if shortest = distance4 [set goal 7]
-    if shortest = distance4 [set goal 8]
-    if shortest = distance4 [set goal 9]
-    if shortest = distance4 [set goal 10]
   ]
-
+ set-survivors-attributes
   ; Start fire
   let origin one-of patches
   while [ [ pcolor ] of origin = black ] [
@@ -75,11 +65,20 @@ end
 
 to go
   spread-fire
-
+  ask patches [
+    set force-0 compute-force 0
+  ]
   ifelse behaviour = "normal"
   [ move-normal ]
   [ follow-crowd ]
   tick
+end
+
+to-report compute-force [ direction ]
+  ; Force exerted by survivors in the patch in direction
+  ; acceleration = (vFinal−vInitial)/(tFinal−tInitial)
+  ; Force = mass x acceleration
+
 end
 
 to spread-fire
@@ -91,7 +90,9 @@ to spread-fire
 
   ;; Kill agents on patches which have caught fire
   ask survivors [
-    if [ pcolor ] of patch-here = orange [ die ]
+    if [ pcolor ] of patch-here = orange [
+      set fire-deaths fire-deaths + 1
+      die ]
   ]
   ;; kill exit door
   ask doors [
@@ -185,6 +186,35 @@ to setup-stadium
   draw-rectangle -114 -1 228 80 gray  ;draw floating platform
   create-stairs1 ;create all left-facing stairs
   create-stairs2 ;create all right-facing stairs
+end
+
+to set-survivors-attributes
+  ask survivors [
+    let rand-prob random-float 1.0
+    ifelse rand-prob < 0.5
+    [ set gender "male" ]
+    [ set gender "female" ]
+
+    ifelse rand-prob <= 0.1498
+    [ set age "child" ]
+    [ ifelse rand-prob < 0.8708
+      [ set age "adult" ]
+      [ set age "elderly" ]
+    ]
+
+    ifelse age = "child"
+    [ set speed 1.4 ]
+    [ ifelse age = "adult"
+      [ set speed random-float-between 5.32 5.43 ]
+      [ set speed random-float-between 4.51 4.75 ]
+    ]
+
+    ; Mass
+  ]
+end
+
+to-report random-float-between [ #min #max ]  ; random float in given range
+  report #min + random-float (#max - #min)
 end
 
 to draw-black
