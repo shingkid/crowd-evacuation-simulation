@@ -186,7 +186,7 @@ to setup-stadium
   create-green2
   create-green3
   draw-rectangle -250 21 500 8 gray
-  draw-rectangle -14 13 25 14 white ;draw center bridge
+  draw-rectangle -14 13 25 14 gray ;draw center bridge
   ;draw-black
   draw-leftbridge
   draw-rightbridge
@@ -333,7 +333,7 @@ to create-blue1
   let peoplelist create-peoplelist 17 -230
   (foreach ylist [ [y] ->
     draw-rectangle -230 y 17 1 blue
-   (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color blue set heading 180]])
+    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color blue set heading 180]])
     ])
   set ylist create-ylist 17 98
   (foreach ylist [ [y] ->
@@ -354,7 +354,7 @@ to create-blue2
   let peoplelist create-peoplelist 17 -203
   (foreach ylist [ [y] ->
     draw-rectangle -203 y 17 1 blue
-    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color blue set heading 180]])
+    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color blue set heading 180]])
     ])
   set ylist create-ylist 17 98
   (foreach ylist [ [y] ->
@@ -691,7 +691,7 @@ to draw-leftbridge
   let xlist create-xlist2 -120
   let ylist create-ylist2 14 13
   (foreach xlist ylist [ [x y] ->
-    draw-rectangle x y 17 1 white
+    draw-rectangle x y 17 1 gray
     ])
 end
 
@@ -699,7 +699,7 @@ to draw-rightbridge
   let xlist create-xlist3 94
   let ylist create-ylist2 14 13
   (foreach xlist ylist [ [x y] ->
-    draw-rectangle x y 17 1 white
+    draw-rectangle x y 17 1 gray
     ])
 end
 @#$#@#$#@
