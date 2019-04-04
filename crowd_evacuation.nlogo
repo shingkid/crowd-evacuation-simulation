@@ -102,20 +102,24 @@ end
 to go
   spread-fire
 
-  ask survivors [
-    if is-patch? patch-at-heading-and-distance (180 + heading) vision [
-      if [pcolor] of patch-ahead vision = orange or [pcolor] of patch-at-heading-and-distance (180 + heading) vision = orange [
-        set panic 2
+  if use-panic? [
+    ask survivors [
+      if is-patch? patch-at-heading-and-distance (180 + heading) vision [
+        if [pcolor] of patch-ahead vision = orange or [pcolor] of patch-at-heading-and-distance (180 + heading) vision = orange [
+          set panic 2
+          set speed 1.8056 ; 6.5km/h = 1.8056m/s
+        ]
       ]
-    ]
 
-    if is-patch? patch-at-heading-and-distance (180 + heading) (vision / 2) [
-      if [pcolor] of patch-ahead (vision / 2) = orange or [pcolor] of patch-at-heading-and-distance (180 + heading) (vision / 2) = orange [
-        set panic 3
+      if is-patch? patch-at-heading-and-distance (180 + heading) (vision / 2) [
+        if [pcolor] of patch-ahead (vision / 2) = orange or [pcolor] of patch-at-heading-and-distance (180 + heading) (vision / 2) = orange [
+          set panic 3
+          set speed 2.5 ; 9km/h = 2.5m/s
+        ]
       ]
-    ]
 
-    set speed base-speed * panic
+      ;    set speed base-speed * panic
+    ]
   ]
 
   ifelse behaviour = "smart"
@@ -206,31 +210,32 @@ to move-normal
     if goal = 8 [set next-patch min-one-of neighbors [distance8]]
     if goal = 9 [set next-patch min-one-of neighbors [distance9]]
     if goal = 10 [set next-patch min-one-of neighbors [distance10]]
-    while [ [pcolor] of next-patch != grey] [
-      ask next-patch [
-        set distance1 10000000
-        set distance2 10000000
-        set distance3 10000000
-        set distance4 10000000
-        set distance5 10000000
-        set distance6 10000000
-        set distance7 10000000
-        set distance8 10000000
-        set distance9 10000000
-        set distance10 10000000
-      ]
-      if goal = 1 [set next-patch min-one-of neighbors [distance1]]
-      if goal = 2 [set next-patch min-one-of neighbors [distance2]]
-      if goal = 3 [set next-patch min-one-of neighbors [distance3]]
-      if goal = 4 [set next-patch min-one-of neighbors [distance4]]
-      if goal = 5 [set next-patch min-one-of neighbors [distance5]]
-      if goal = 6 [set next-patch min-one-of neighbors [distance6]]
-      if goal = 7 [set next-patch min-one-of neighbors [distance7]]
-      if goal = 8 [set next-patch min-one-of neighbors [distance8]]
-      if goal = 9 [set next-patch min-one-of neighbors [distance9]]
-      if goal = 10 [set next-patch min-one-of neighbors [distance10]]
-    ]
     repeat speed [
+      while [ [pcolor] of next-patch != grey] [
+        ask next-patch [
+          set distance1 10000000
+          set distance2 10000000
+          set distance3 10000000
+          set distance4 10000000
+          set distance5 10000000
+          set distance6 10000000
+          set distance7 10000000
+          set distance8 10000000
+          set distance9 10000000
+          set distance10 10000000
+        ]
+        if goal = 1 [set next-patch min-one-of neighbors [distance1]]
+        if goal = 2 [set next-patch min-one-of neighbors [distance2]]
+        if goal = 3 [set next-patch min-one-of neighbors [distance3]]
+        if goal = 4 [set next-patch min-one-of neighbors [distance4]]
+        if goal = 5 [set next-patch min-one-of neighbors [distance5]]
+        if goal = 6 [set next-patch min-one-of neighbors [distance6]]
+        if goal = 7 [set next-patch min-one-of neighbors [distance7]]
+        if goal = 8 [set next-patch min-one-of neighbors [distance8]]
+        if goal = 9 [set next-patch min-one-of neighbors [distance9]]
+        if goal = 10 [set next-patch min-one-of neighbors [distance10]]
+      ]
+
       if not patch-overcrowded? next-patch [ move-to next-patch ]
     ]
     if any? doors-here [
@@ -334,10 +339,10 @@ to set-survivors-attributes
 
     ; Set base speed
     ifelse age = "child"
-    [ set base-speed 1.4 ]
+    [ set base-speed 0.3889 ] ; 1.4km/h = 0.38889m/s
     [ ifelse age = "adult"
-      [ set base-speed random-float-between 5.32 5.43 ]
-      [ set base-speed random-float-between 4.51 4.75 ]
+      [ set base-speed random-float-between 1.4778 1.5083 ] ; 5.32km/h = 1.4778m/s and 5.43km/h = 1.5083m/s
+      [ set base-speed random-float-between 1.2528 1.3194 ] ; 4.51km/h = 1.2528m/s and 4.75km/h = 1.3194m/s
     ]
     set speed base-speed
 ;    ifelse age < 15
@@ -363,6 +368,7 @@ to set-survivors-attributes
 
     ; Set health
     set health mass * speed * threshold
+;    show health
 
     ; Set vision
     set vision random max-vision
@@ -959,10 +965,10 @@ SLIDER
 132
 threshold
 threshold
-1
-20
-20.0
-1
+10
+100
+50.0
+10
 1
 NIL
 HORIZONTAL
@@ -1125,7 +1131,7 @@ HORIZONTAL
 MONITOR
 3
 524
-135
+118
 569
 Average panic level
 precision mean [panic] of survivors 5
@@ -1134,15 +1140,26 @@ precision mean [panic] of survivors 5
 11
 
 MONITOR
-142
+122
 524
-246
+258
 569
-Average speed
-precision mean [speed] of survivors 3
+Top speed (m/s)
+precision max [speed] of survivors 3
 17
 1
 11
+
+SWITCH
+147
+50
+259
+83
+use-panic?
+use-panic?
+1
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
