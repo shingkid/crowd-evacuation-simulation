@@ -1,23 +1,33 @@
-globals[countofalive]
-breed [survivors survivor]
-breed[doors door]
+globals [
+  countofalive
+  fire-deaths
+  stampede-deaths
+]
+
+breed [ survivors survivor ]
+breed [ doors door ]
+
 patches-own [
   owner
   distance1
   distance2
   distance3
   distance4
+  force-0
+  force-90
+  force-180
+  force-270
 ]
 
-survivors-own[
+survivors-own [
   goal
-  health
-  mobility
-  speed
-  vision
+  speed  ; impacted by status and patch pressure (sum surrounding patch pressure)
+  vision ;
   gender
   age
-  reaction-time
+  mass
+  panic
+;  reaction-time
 ;  collaboration
 ;  insistence
   knowledge
@@ -43,6 +53,8 @@ to setup
     if shortest = distance4 [set goal 4]
   ]
 
+  set-survivors-attributes
+
   ; Start fire
   let origin one-of patches
   while [ [ pcolor ] of origin = black ] [
@@ -57,11 +69,21 @@ end
 
 to go
   spread-fire
+  ask patches [
+    set force-0 compute-force 0
+  ]
 
   ifelse behaviour = "normal"
   [ move-normal ]
   [ follow-crowd ]
   tick
+end
+
+to-report compute-force [ direction ]
+  ; Force exerted by survivors in the patch in direction
+  ; acceleration = (vFinal−vInitial)/(tFinal−tInitial)
+  ; Force = mass x acceleration
+
 end
 
 to spread-fire
@@ -73,8 +95,12 @@ to spread-fire
 
   ;; Kill agents on patches which have caught fire
   ask survivors [
-    if [ pcolor ] of patch-here = orange [ die ]
+    if [ pcolor ] of patch-here = orange [
+      set fire-deaths fire-deaths + 1
+      die
+    ]
   ]
+
   ;; kill exit door
   ask doors [
     if [ pcolor ] of patch-here = orange [ die ]
@@ -100,19 +126,19 @@ to move-normal
       if goal = 4 [set next-patch min-one-of neighbors [distance4]]
     ]
     move-to next-patch
-    if any? doors-here[
+    if any? doors-here [
       set countofalive countofalive + 1
-      die ]
+      die
+    ]
   ]
-;  ;]
 end
 
 to follow-crowd
-  ask turtles[
+  ask survivors[
     let patchAhead patch-ahead 1
-    ifelse ( [pcolor] of patchAhead = grey or [pcolor] of patchAhead = white)
+    ifelse ([pcolor] of patchAhead = gray)
     [
-      fd 1
+      fd speed
     ]
     [
       let dice random 1
@@ -126,11 +152,11 @@ to follow-crowd
       ]
       ask patches in-cone 1 30
       [
-        if (pcolor = grey or pcolor = white)
+        if (pcolor = gray)
         [
           ask myself
           [
-            let closest-person min-one-of (other turtles) [distance myself]
+            let closest-person min-one-of (other survivors) [distance myself]
 ;            set heading closest-person
             fd 1
           ]
@@ -167,6 +193,35 @@ to setup-stadium
   draw-rectangle -114 -1 228 80 gray  ;draw floating platform
   create-stairs1 ;create all left-facing stairs
   create-stairs2 ;create all right-facing stairs
+end
+
+to set-survivors-attributes
+  ask survivors [
+    let rand-prob random-float 1.0
+    ifelse rand-prob < 0.5
+    [ set gender "male" ]
+    [ set gender "female" ]
+
+    ifelse rand-prob <= 0.1498
+    [ set age "child" ]
+    [ ifelse rand-prob < 0.8708
+      [ set age "adult" ]
+      [ set age "elderly" ]
+    ]
+
+    ifelse age = "child"
+    [ set speed 1.4 ]
+    [ ifelse age = "adult"
+      [ set speed random-float-between 5.32 5.43 ]
+      [ set speed random-float-between 4.51 4.75 ]
+    ]
+
+    ; Mass
+  ]
+end
+
+to-report random-float-between [ #min #max ]  ; random float in given range
+  report #min + random-float (#max - #min)
 end
 
 to draw-black
