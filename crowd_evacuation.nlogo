@@ -36,6 +36,7 @@ patches-own [
 survivors-own [
   goal
   health
+  base-speed
   speed  ; impacted by status and patch pressure (sum surrounding patch pressure)
   vision
   gender
@@ -100,11 +101,28 @@ end
 
 to go
   spread-fire
+
+  ask survivors [
+    if is-patch? patch-at-heading-and-distance (180 + heading) vision [
+      if [pcolor] of patch-ahead vision = orange or [pcolor] of patch-at-heading-and-distance (180 + heading) vision = orange [
+        set panic 2
+      ]
+    ]
+
+    if is-patch? patch-at-heading-and-distance (180 + heading) (vision / 2) [
+      if [pcolor] of patch-ahead (vision / 2) = orange or [pcolor] of patch-at-heading-and-distance (180 + heading) (vision / 2) = orange [
+        set panic 3
+      ]
+    ]
+
+    set speed base-speed * panic
+  ]
+
   ifelse behaviour = "smart"
   [ move-normal ]
   [ follow-crowd ]
-  ; Compute force exerted by survivors on each patch
 
+  ; Compute force exerted by survivors on each patch
   ask survivors [
     if compute-force patch-here >= health [
       ifelse color = blue
@@ -124,7 +142,7 @@ to go
       ]
       die
     ]
- ]
+  ]
 
   tick
 end
@@ -298,23 +316,34 @@ end
 
 to set-survivors-attributes
   ask survivors [
+    ; Set gender
     ifelse random-float 1.0 < 0.5
     [ set gender "male" ]
     [ set gender "female" ]
 
+    ; Set age
     ifelse random-float 1.0 <= 0.1498
     [ set age "child" ]
     [ ifelse random-float 1.0 < 0.8708
       [ set age "adult" ]
       [ set age "elderly" ]
     ]
+;    set age random-normal 42.4 20
 
+    ; Set base speed
     ifelse age = "child"
-    [ set speed 1.4 ]
+    [ set base-speed 1.4 ]
     [ ifelse age = "adult"
-      [ set speed random-float-between 5.32 5.43 ]
-      [ set speed random-float-between 4.51 4.75 ]
+      [ set base-speed random-float-between 5.32 5.43 ]
+      [ set base-speed random-float-between 4.51 4.75 ]
     ]
+    set speed base-speed
+;    ifelse age < 15
+;    [ set speed 1.4 ]
+;    [ ifelse age < 65
+;      [ set speed random-float-between 5.32 5.43 ]
+;      [ set speed random-float-between 4.51 4.75 ]
+;    ]
 
     ; Set mass
     ifelse age = "child"
@@ -323,9 +352,21 @@ to set-survivors-attributes
       [ set mass random-normal 35 4]
     ]
     [ set mass random-normal 57.5 4 ]
+;    ifelse age < 15
+;    [ ifelse gender = "male"
+;      [ set mass random-normal 40 4]
+;      [ set mass random-normal 35 4]
+;    ]
+;    [ set mass random-normal 57.5 4 ]
 
     ; Set health
     set health mass * speed * threshold
+
+    ; Set vision
+    set vision random max-vision
+
+    ; Set panic level
+    set panic 1
   ]
 end
 
@@ -840,10 +881,10 @@ ticks
 1.0
 
 BUTTON
-5
-414
-71
-447
+4
+450
+70
+483
 NIL
 setup
 NIL
@@ -857,10 +898,10 @@ NIL
 1
 
 BUTTON
-76
-414
-139
-447
+75
+450
+138
+483
 NIL
 go
 NIL
@@ -874,10 +915,10 @@ NIL
 1
 
 MONITOR
-5
-103
-117
-148
+4
+139
+116
+184
 No. of survivors
 count survivors
 17
@@ -885,20 +926,20 @@ count survivors
 11
 
 CHOOSER
-4
-10
-142
-55
+3
+46
+141
+91
 behaviour
 behaviour
 "smart" "follow"
 0
 
 MONITOR
-4
-153
-72
-198
+3
+189
+71
+234
 Total Escapees
 blue-escapees + cyan-escapees + yellow-escapees + red-escapees + beige-escapees + green-escapees
 17
@@ -906,25 +947,25 @@ blue-escapees + cyan-escapees + yellow-escapees + red-escapees + beige-escapees 
 11
 
 SLIDER
-5
-63
-177
-96
+4
+99
+176
+132
 threshold
 threshold
 1
 20
-20.0
+4.0
 1
 1
 NIL
 HORIZONTAL
 
 PLOT
-5
-259
-262
-409
+4
+295
+261
+445
 Survivors
 NIL
 NIL
@@ -942,10 +983,10 @@ PENS
 "Fire-deaths" 1.0 0 -955883 true "" "plot blue-fire-deaths + cyan-fire-deaths + yellow-fire-deaths + red-fire-deaths + beige-fire-deaths + green-fire-deaths"
 
 MONITOR
-5
-207
-79
-252
+4
+243
+78
+288
 Fire victims
 blue-fire-deaths + cyan-fire-deaths + yellow-fire-deaths + red-fire-deaths + beige-fire-deaths + green-fire-deaths
 17
@@ -953,10 +994,10 @@ blue-fire-deaths + cyan-fire-deaths + yellow-fire-deaths + red-fire-deaths + bei
 11
 
 MONITOR
-86
-207
-196
-252
+85
+243
+195
+288
 Stampede victims
 blue-stampede-deaths + cyan-stampede-deaths + yellow-stampede-deaths + red-stampede-deaths + beige-stampede-deaths + green-stampede-deaths
 17
@@ -964,10 +1005,10 @@ blue-stampede-deaths + cyan-stampede-deaths + yellow-stampede-deaths + red-stamp
 11
 
 BUTTON
-5
-451
-166
-484
+4
+487
+165
+520
 go until no survivors
 while [count survivors > 0 ] [ go ]
 NIL
@@ -981,10 +1022,10 @@ NIL
 1
 
 MONITOR
-79
-153
-181
-198
+78
+189
+180
+234
 Available Exits
 count doors
 17
@@ -992,10 +1033,10 @@ count doors
 11
 
 PLOT
-7
-496
-252
-646
+3
+574
+248
+724
 Escapees by Color
 NIL
 NIL
@@ -1015,10 +1056,10 @@ PENS
 "green" 1.0 0 -10899396 true "" "plot green-escapees"
 
 PLOT
-7
-654
-249
-804
+3
+732
+245
+882
 Stampede victims by Color
 NIL
 NIL
@@ -1038,10 +1079,10 @@ PENS
 "green" 1.0 0 -10899396 true "" "plot green-stampede-deaths"
 
 PLOT
-6
-812
-249
-962
+2
+890
+245
+1040
 Fire victims by Color
 NIL
 NIL
@@ -1059,6 +1100,43 @@ PENS
 "yellow" 1.0 0 -1184463 true "" "plot yellow-fire-deaths"
 "beige" 1.0 0 -204336 true "" "plot beige-fire-deaths"
 "green" 1.0 0 -10899396 true "" "plot green-fire-deaths"
+
+SLIDER
+3
+10
+175
+43
+max-vision
+max-vision
+10
+50
+20.0
+1
+1
+NIL
+HORIZONTAL
+
+MONITOR
+3
+524
+135
+569
+Average panic level
+precision mean [panic] of survivors 5
+17
+1
+11
+
+MONITOR
+142
+524
+246
+569
+Average speed
+precision mean [speed] of survivors 3
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
