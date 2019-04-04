@@ -6,7 +6,6 @@ globals [
 breed [survivors survivor]
 breed[doors door]
 patches-own [
-  owner
   distance1
   distance2
   distance3
@@ -17,14 +16,13 @@ patches-own [
   distance8
   distance9
   distance10
-  pforce
 ]
 
 survivors-own [
   goal
   health
   speed  ; impacted by status and patch pressure (sum surrounding patch pressure)
-  vision ;
+  vision
   gender
   age
   mass
@@ -147,7 +145,7 @@ to move-normal
     if goal = 8 [set next-patch min-one-of neighbors [distance8]]
     if goal = 9 [set next-patch min-one-of neighbors [distance9]]
     if goal = 10 [set next-patch min-one-of neighbors [distance10]]
-    while [ [pcolor] of next-patch != grey][
+    while [ [pcolor] of next-patch != grey] [
       ask next-patch [
         set distance1 10000000
         set distance2 10000000
@@ -158,7 +156,8 @@ to move-normal
         set distance7 10000000
         set distance8 10000000
         set distance9 10000000
-        set distance10 10000000]
+        set distance10 10000000
+      ]
       if goal = 1 [set next-patch min-one-of neighbors [distance1]]
       if goal = 2 [set next-patch min-one-of neighbors [distance2]]
       if goal = 3 [set next-patch min-one-of neighbors [distance3]]
@@ -170,12 +169,14 @@ to move-normal
       if goal = 9 [set next-patch min-one-of neighbors [distance9]]
       if goal = 10 [set next-patch min-one-of neighbors [distance10]]
     ]
-    move-to next-patch
-    if any? doors-here[
+;    move-to next-patch
+    face next-patch
+    fd speed
+    if any? doors-here [
       set count-of-escapee count-of-escapee + 1
-      die ]
+      die
+    ]
   ]
-;  ;]
 end
 
 to follow-crowd
@@ -183,7 +184,7 @@ to follow-crowd
     let patchAhead patch-ahead 1
     ifelse ( [pcolor] of patchAhead = grey or [pcolor] of patchAhead = white)
     [
-      fd 1
+      fd speed
     ]
     [
       let dice random 1
@@ -203,7 +204,7 @@ to follow-crowd
           [
             let closest-person min-one-of (other turtles) [distance myself]
 ;            set heading closest-person
-            fd 1
+            fd speed
           ]
         ]
       ]
@@ -242,14 +243,13 @@ end
 
 to set-survivors-attributes
   ask survivors [
-    let rand-prob random-float 1.0
-    ifelse rand-prob < 0.5
+    ifelse random-float 1.0 < 0.5
     [ set gender "male" ]
     [ set gender "female" ]
 
-    ifelse rand-prob <= 0.1498
+    ifelse random-float 1.0 <= 0.1498
     [ set age "child" ]
-    [ ifelse rand-prob < 0.8708
+    [ ifelse random-float 1.0 < 0.8708
       [ set age "adult" ]
       [ set age "elderly" ]
     ]
@@ -261,7 +261,7 @@ to set-survivors-attributes
       [ set speed random-float-between 4.51 4.75 ]
     ]
 
-     ; Mass
+    ; Set mass
     ifelse age = "child"
     [ ifelse gender = "male"
       [ set mass random-normal 40 4]
@@ -785,10 +785,10 @@ ticks
 1.0
 
 BUTTON
-31
-457
-97
-490
+5
+414
+71
+447
 NIL
 setup
 NIL
@@ -802,10 +802,10 @@ NIL
 1
 
 BUTTON
-128
-457
-191
-490
+76
+414
+139
+447
 NIL
 go
 NIL
@@ -819,10 +819,10 @@ NIL
 1
 
 MONITOR
-31
-402
-143
-447
+5
+103
+117
+148
 No. of survivors
 count survivors
 17
@@ -830,23 +830,92 @@ count survivors
 11
 
 CHOOSER
-30
-345
-168
-390
+4
+10
+142
+55
 behaviour
 behaviour
 "normal" "follow"
 0
 
-BUTTON
-33
-504
+MONITOR
+4
+153
+72
+198
+Escapees
+count-of-escapee
+17
+1
+11
+
+SLIDER
+5
+63
+177
 96
-537
+threshold
+threshold
+1
+20
+20.0
+1
+1
 NIL
-go
-T
+HORIZONTAL
+
+PLOT
+5
+259
+205
+409
+Survivors
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot count survivors"
+"pen-1" 1.0 0 -7500403 true "" "plot count-of-escapee"
+"pen-2" 1.0 0 -2674135 true "" "plot stampede-deaths"
+"pen-3" 1.0 0 -955883 true "" "plot fire-deaths"
+
+MONITOR
+5
+207
+79
+252
+Fire victims
+fire-deaths
+17
+1
+11
+
+MONITOR
+86
+207
+196
+252
+Stampede victims
+stampede-deaths
+17
+1
+11
+
+BUTTON
+5
+451
+166
+484
+go until no survivors
+while [count survivors > 0 ] [ go ]
+NIL
 1
 T
 OBSERVER
@@ -857,30 +926,15 @@ NIL
 1
 
 MONITOR
-68
-159
-185
-204
-Count of Escapees
-count-of-escapee
+79
+153
+181
+198
+Available Exits
+count doors
 17
 1
 11
-
-SLIDER
-25
-73
-197
-106
-threshold
-threshold
-1
-20
-12.0
-1
-1
-NIL
-HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
