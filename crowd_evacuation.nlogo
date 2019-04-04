@@ -53,27 +53,33 @@ end
 
 to move-normal
   ask turtles[
-    let patchAhead patch-ahead 1
-    ifelse ( [pcolor] of patchAhead = grey or [pcolor] of patchAhead = white)
-    [
-      fd 1
+;    let patchAhead patch-ahead 1
+;    ifelse ( [pcolor] of patchAhead = grey or [pcolor] of patchAhead = white)
+;    [
+;      face patchAhead
+;      fd 1
+;    ]
+;    [
+;      let patchLeft patch-left-and-ahead 90 1
+;      ifelse ( [pcolor] of patchLeft = grey or [pcolor] of patchLeft = white)
+;      [
+;        face patchLeft
+;        fd 1
+;      ]
+;      [
+;        let patchRight patch-right-and-ahead 90 1
+;        if ( [pcolor] of patchRight = grey or [pcolor] of patchRight = white)
+;        [
+;          face patchRight
+;          fd 1
+;        ]
+;      ]
+;    ]
+    let next-patch one-of neighbors
+    while [ [pcolor] of next-patch != grey][
+      set next-patch one-of neighbors
     ]
-    [
-      let patchLeft patch-left-and-ahead 90 1
-      ifelse ( [pcolor] of patchLeft = grey or [pcolor] of patchLeft = white)
-      [
-        face patchLeft
-        fd 1
-      ]
-      [
-        let patchRight patch-right-and-ahead 90 1
-        if ( [pcolor] of patchRight = grey or [pcolor] of patchRight = white)
-        [
-          face patchRight
-          fd 1
-        ]
-      ]
-    ]
+    move-to next-patch
   ]
 end
 
@@ -111,7 +117,7 @@ to follow-crowd
 end
 
 to setup-stadium
-  draw-rectangle -230 135 457 140 gray
+  draw-rectangle -230 135 457 110 gray
   create-blue1
   create-blue2
   create-blue3
@@ -129,26 +135,26 @@ to setup-stadium
   create-green1
   create-green2
   create-green3
-  draw-rectangle -250 -9 500 8 gray
-  draw-rectangle -14 -17 25 14 white ;draw center bridge
-  draw-black
+  draw-rectangle -250 21 500 8 gray
+  draw-rectangle -14 13 25 14 white ;draw center bridge
+  ;draw-black
   draw-leftbridge
   draw-rightbridge
-  draw-rectangle -114 -31 228 80 gray  ;draw floating platform
+  draw-rectangle -114 -1 228 80 gray  ;draw floating platform
   create-stairs1 ;create all left-facing stairs
   create-stairs2 ;create all right-facing stairs
 end
 
 to draw-black
-  draw-rectangle -230 39 1 44 black
+  draw-rectangle -180 39 1 44 black
   draw-rectangle -229 37 1 42 black
   draw-rectangle -228 35 1 40 black
   draw-rectangle -227 33 1 38 black
   draw-rectangle -226 31 1 36 black
   draw-rectangle -225 29 1 34 black
   draw-rectangle -224 27 1 32 black
-  draw-rectangle -223 25 1 30 black
-  draw-rectangle -222 23 1 28 black
+  draw-rectangle -218 25 1 30 black
+  ;draw-rectangle -222 lol 1 28 black ; 18
   draw-rectangle -221 21 1 26 black
   draw-rectangle -220 19 1 24 black
   draw-rectangle -219 17 1 22 black
@@ -165,12 +171,12 @@ to draw-black
   draw-rectangle 226 39 1 44 black
   draw-rectangle 225 37 1 42 black
   draw-rectangle 224 35 1 40 black
-  draw-rectangle 223 33 1 38 black
+  draw-rectangle 218 33 1 38 black
   draw-rectangle 222 31 1 36 black
   draw-rectangle 221 29 1 34 black
   draw-rectangle 220 27 1 32 black
   draw-rectangle 219 25 1 30 black
-  draw-rectangle 218 23 1 28 black
+  ;draw-rectangle 218 lol 1 28 black ;18
   draw-rectangle 217 21 1 26 black
   draw-rectangle 216 19 1 24 black
   draw-rectangle 215 17 1 22 black
@@ -189,27 +195,27 @@ end
 
 to create-stairs1
   let xlist create-xlist4 119
-  let ylist create-ylist2 5 -4
+  let ylist create-ylist2 5 26
   (foreach xlist ylist [ [x y] ->
     draw-rectangle x y 2 1 white
     ])
   set xlist create-xlist4 65
-  set ylist create-ylist2 5 -4
+  set ylist create-ylist2 5 26
   (foreach xlist ylist [ [x y] ->
     draw-rectangle x y 2 1 white
     ])
   set xlist create-xlist4 -43
-  set ylist create-ylist2 5 -4
+  set ylist create-ylist2 5 26
   (foreach xlist ylist [ [x y] ->
     draw-rectangle x y 2 1 white
     ])
   set xlist create-xlist4 -97
-  set ylist create-ylist2 5 -4
+  set ylist create-ylist2 5 26
   (foreach xlist ylist [ [x y] ->
     draw-rectangle x y 2 1 white
     ])
   set xlist create-xlist4 -178
-  set ylist create-ylist2 5 -4
+  set ylist create-ylist2 5 26
   (foreach xlist ylist [ [x y] ->
     draw-rectangle x y 2 1 white
     ])
@@ -217,47 +223,47 @@ end
 
 to create-stairs2
   let xlist create-xlist5 173
-  let ylist create-ylist2 5 -4
+  let ylist create-ylist2 5 26
   (foreach xlist ylist [ [x y] ->
     draw-rectangle x y 2 1 white
     ])
   set xlist create-xlist5 92
-  set ylist create-ylist2 5 -4
+  set ylist create-ylist2 5 26
   (foreach xlist ylist [ [x y] ->
     draw-rectangle x y 2 1 white
     ])
   set xlist create-xlist5 38
-  set ylist create-ylist2 5 -4
+  set ylist create-ylist2 5 26
   (foreach xlist ylist [ [x y] ->
     draw-rectangle x y 2 1 white
     ])
   set xlist create-xlist5 -70
-  set ylist create-ylist2 5 -4
+  set ylist create-ylist2 5 26
   (foreach xlist ylist [ [x y] ->
     draw-rectangle x y 2 1 white
     ])
   set xlist create-xlist5 -124
-  set ylist create-ylist2 5 -4
+  set ylist create-ylist2 5 26
   (foreach xlist ylist [ [x y] ->
     draw-rectangle x y 2 1 white
     ])
 end
 
 to create-blue1
-  let ylist create-ylist 23 135
-  let peoplelist create-peoplelist 25 -230
+  let ylist create-ylist 18 135
+  let peoplelist create-peoplelist 24 -230
   (foreach ylist [ [y] ->
-    draw-rectangle -230 y 25 1 blue
+    draw-rectangle -230 y 24 1 blue
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color blue set heading 180]])
     ])
-  set ylist create-ylist 23 88
+  set ylist create-ylist 18 98
   (foreach ylist [ [y] ->
-    draw-rectangle -230 y 25 1 blue
+    draw-rectangle -230 y 24 1 blue
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color blue set heading 180]])
     ])
   let xlist create-xlist -230
-  set ylist create-ylist 23 41
-  let wlist create-wlist 25
+  set ylist create-ylist 18 61
+  let wlist create-wlist 24
   (foreach xlist ylist wlist [ [x y w] ->
     draw-rectangle x y w 1 blue
     set peoplelist create-peoplelist w x
@@ -265,293 +271,293 @@ to create-blue1
     ])
 end
 to create-blue2
-  let ylist create-ylist 23 135
-  let peoplelist create-peoplelist 25 -203
+  let ylist create-ylist 18 135
+  let peoplelist create-peoplelist 24 -203
   (foreach ylist [ [y] ->
-    draw-rectangle -203 y 25 1 blue
-    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color blue set heading 180]])
+    draw-rectangle -203 y 24 1 blue
+    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color blue set heading 180]])
     ])
-  set ylist create-ylist 23 88
+  set ylist create-ylist 18 98
   (foreach ylist [ [y] ->
-    draw-rectangle -203 y 25 1 blue
-    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color blue set heading 180]])
+    draw-rectangle -203 y 24 1 blue
+    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color blue set heading 180]])
     ])
-  set ylist create-ylist 23 41
+  set ylist create-ylist 18 61
   (foreach ylist [ [y] ->
-    draw-rectangle -203 y 25 1 blue
-    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color blue set heading 180]])
+    draw-rectangle -203 y 24 1 blue
+    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color blue set heading 180]])
     ])
 end
 to create-blue3
-  let ylist create-ylist 23 135
-  let peoplelist create-peoplelist 25 -176
+  let ylist create-ylist 18 135
+  let peoplelist create-peoplelist 24 -176
   (foreach ylist [ [y] ->
-    draw-rectangle -176 y 25 1 blue
-    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color blue set heading 180]])
+    draw-rectangle -176 y 24 1 blue
+    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color blue set heading 180]])
     ])
-  set ylist create-ylist 23 88
+  set ylist create-ylist 18 98
   (foreach ylist [ [y] ->
-    draw-rectangle -176 y 25 1 blue
-    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color blue set heading 180]])
+    draw-rectangle -176 y 24 1 blue
+    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color blue set heading 180]])
     ])
-  set ylist create-ylist 23 41
+  set ylist create-ylist 18 61
   (foreach ylist [ [y] ->
-    draw-rectangle -176 y 25 1 blue
-    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color blue set heading 180]])
+    draw-rectangle -176 y 24 1 blue
+    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color blue set heading 180]])
     ])
 end
 
 to create-cyan1
-  let ylist create-ylist 23 135
-  let peoplelist create-peoplelist 25 -149
+  let ylist create-ylist 18 135
+  let peoplelist create-peoplelist 24 -149
   (foreach ylist [ [y] ->
-    draw-rectangle -149 y 25 1 cyan
-    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color cyan set heading 180]])
+    draw-rectangle -149 y 24 1 cyan
+    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color cyan set heading 180]])
     ])
-  set ylist create-ylist 23 88
+  set ylist create-ylist 18 98
   (foreach ylist [ [y] ->
-    draw-rectangle -149 y 25 1 cyan
-    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color cyan set heading 180]])
+    draw-rectangle -149 y 24 1 cyan
+    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color cyan set heading 180]])
     ])
-  set ylist create-ylist 23 41
+  set ylist create-ylist 18 61
   (foreach ylist [ [y] ->
-    draw-rectangle -149 y 25 1 cyan
-    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color cyan set heading 180]])
+    draw-rectangle -149 y 24 1 cyan
+    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color cyan set heading 180]])
     ])
 end
 to create-cyan2
-  let ylist create-ylist 23 135
-  let peoplelist create-peoplelist 25 -122
+  let ylist create-ylist 18 135
+  let peoplelist create-peoplelist 24 -122
   (foreach ylist [ [y] ->
-    draw-rectangle -122 y 25 1 cyan
-    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color cyan set heading 180]])
+    draw-rectangle -122 y 24 1 cyan
+    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color cyan set heading 180]])
     ])
-  set ylist create-ylist 23 88
+  set ylist create-ylist 18 98
   (foreach ylist [ [y] ->
-    draw-rectangle -122 y 25 1 cyan
-    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color cyan set heading 180]])
+    draw-rectangle -122 y 24 1 cyan
+    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color cyan set heading 180]])
     ])
-  set ylist create-ylist 23 41
+  set ylist create-ylist 18 61
   (foreach ylist [ [y] ->
-    draw-rectangle -122 y 25 1 cyan
-    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color cyan set heading 180]])
+    draw-rectangle -122 y 24 1 cyan
+    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color cyan set heading 180]])
     ])
 end
 to create-cyan3
-  let ylist create-ylist 23 135
-  let peoplelist create-peoplelist 25 -95
+  let ylist create-ylist 18 135
+  let peoplelist create-peoplelist 24 -95
   (foreach ylist [ [y] ->
-    draw-rectangle -95 y 25 1 cyan
-    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color cyan set heading 180]])
+    draw-rectangle -95 y 24 1 cyan
+    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color cyan set heading 180]])
     ])
-  set ylist create-ylist 23 88
+  set ylist create-ylist 18 98
   (foreach ylist [ [y] ->
-    draw-rectangle -95 y 25 1 cyan
-    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color cyan set heading 180]])
+    draw-rectangle -95 y 24 1 cyan
+    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color cyan set heading 180]])
     ])
-  set ylist create-ylist 23 41
+  set ylist create-ylist 18 61
   (foreach ylist [ [y] ->
-    draw-rectangle -95 y 25 1 cyan
-    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color cyan set heading 180]])
+    draw-rectangle -95 y 24 1 cyan
+    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color cyan set heading 180]])
     ])
 end
 
 to create-yellow1
-  let ylist create-ylist 23 135
-  let peoplelist create-peoplelist 25 -68
+  let ylist create-ylist 18 135
+  let peoplelist create-peoplelist 24 -68
   (foreach ylist [ [y] ->
-    draw-rectangle -68 y 25 1 yellow
-    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color yellow set heading 180]])
+    draw-rectangle -68 y 24 1 yellow
+    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color yellow set heading 180]])
     ])
-  set ylist create-ylist 23 88
+  set ylist create-ylist 18 98
   (foreach ylist [ [y] ->
-    draw-rectangle -68 y 25 1 yellow
-    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color yellow set heading 180]])
+    draw-rectangle -68 y 24 1 yellow
+    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color yellow set heading 180]])
     ])
-  set ylist create-ylist 23 41
+  set ylist create-ylist 18 61
   (foreach ylist [ [y] ->
-    draw-rectangle -68 y 25 1 yellow
-    (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color yellow set heading 180]])
+    draw-rectangle -68 y 24 1 yellow
+    ;(foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color yellow set heading 180]])
     ])
 end
 to create-yellow2
-  let ylist create-ylist 23 135
-  let peoplelist create-peoplelist 25 -41
+  let ylist create-ylist 18 135
+  let peoplelist create-peoplelist 24 -41
   (foreach ylist [ [y] ->
-    draw-rectangle -41 y 25 1 yellow
+    draw-rectangle -41 y 24 1 yellow
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color yellow set heading 180]])
     ])
-  set ylist create-ylist 23 88
+  set ylist create-ylist 18 98
   (foreach ylist [ [y] ->
-    draw-rectangle -41 y 25 1 red
+    draw-rectangle -41 y 24 1 red
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color red set heading 180]])
     ])
-  set ylist create-ylist 23 41
+  set ylist create-ylist 18 61
   (foreach ylist [ [y] ->
-    draw-rectangle -41 y 25 1 red
+    draw-rectangle -41 y 24 1 red
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color red set heading 180]])
     ])
 end
 to create-yellow3
-  let ylist create-ylist 23 135
-  let peoplelist create-peoplelist 25 -14
+  let ylist create-ylist 18 135
+  let peoplelist create-peoplelist 24 -14
   (foreach ylist [ [y] ->
-    draw-rectangle -14 y 25 1 yellow
+    draw-rectangle -14 y 24 1 yellow
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color yellow set heading 180]])
     ])
-  set ylist create-ylist 23 88
+  set ylist create-ylist 18 98
   (foreach ylist [ [y] ->
-    draw-rectangle -14 y 25 1 red
+    draw-rectangle -14 y 24 1 red
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color red set heading 180]])
     ])
-  set ylist create-ylist 23 41
+  set ylist create-ylist 18 61
   (foreach ylist [ [y] ->
-    draw-rectangle -14 y 25 1 red
+    draw-rectangle -14 y 24 1 red
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color red set heading 180]])
     ])
 end
 to create-yellow4
-  let ylist create-ylist 23 135
-  let peoplelist create-peoplelist 25 13
+  let ylist create-ylist 18 135
+  let peoplelist create-peoplelist 24 13
   (foreach ylist [ [y] ->
-    draw-rectangle 13 y 25 1 yellow
+    draw-rectangle 13 y 24 1 yellow
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color yellow set heading 180]])
     ])
-  set ylist create-ylist 23 88
+  set ylist create-ylist 18 98
   (foreach ylist [ [y] ->
-    draw-rectangle 13 y 25 1 red
+    draw-rectangle 13 y 24 1 red
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color red set heading 180]])
     ])
-  set ylist create-ylist 23 41
+  set ylist create-ylist 18 61
   (foreach ylist [ [y] ->
-    draw-rectangle 13 y 25 1 red
+    draw-rectangle 13 y 24 1 red
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color red set heading 180]])
     ])
 end
 to create-yellow5
-  let ylist create-ylist 23 135
-  let peoplelist create-peoplelist 25 40
+  let ylist create-ylist 18 135
+  let peoplelist create-peoplelist 24 40
   (foreach ylist [ [y] ->
-    draw-rectangle 40 y 25 1 yellow
+    draw-rectangle 40 y 24 1 yellow
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color yellow set heading 180]])
     ])
-  set ylist create-ylist 23 88
+  set ylist create-ylist 18 98
   (foreach ylist [ [y] ->
-    draw-rectangle 40 y 25 1 yellow
+    draw-rectangle 40 y 24 1 yellow
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color yellow set heading 180]])
     ])
-  set ylist create-ylist 23 41
+  set ylist create-ylist 18 61
   (foreach ylist [ [y] ->
-    draw-rectangle 40 y 25 1 yellow
+    draw-rectangle 40 y 24 1 yellow
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color yellow set heading 180]])
     ])
 end
 
 to create-lime1
-  let ylist create-ylist 23 135
-  let peoplelist create-peoplelist 25 67
+  let ylist create-ylist 18 135
+  let peoplelist create-peoplelist 24 67
   (foreach ylist [ [y] ->
-    draw-rectangle 67 y 25 1 29
+    draw-rectangle 67 y 24 1 29
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color 29 set heading 180]])
     ])
-  set ylist create-ylist 23 88
+  set ylist create-ylist 18 98
   (foreach ylist [ [y] ->
-    draw-rectangle 67 y 25 1 29
+    draw-rectangle 67 y 24 1 29
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color 29 set heading 180]])
     ])
-  set ylist create-ylist 23 41
+  set ylist create-ylist 18 61
   (foreach ylist [ [y] ->
-    draw-rectangle 67 y 25 1 29
+    draw-rectangle 67 y 24 1 29
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color 29 set heading 180]])
     ])
 end
 to create-lime2
-  let ylist create-ylist 23 135
-  let peoplelist create-peoplelist 25 94
+  let ylist create-ylist 18 135
+  let peoplelist create-peoplelist 24 94
   (foreach ylist [ [y] ->
-    draw-rectangle 94 y 25 1 29
+    draw-rectangle 94 y 24 1 29
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color 29 set heading 180]])
     ])
-  set ylist create-ylist 23 88
+  set ylist create-ylist 18 98
   (foreach ylist [ [y] ->
-    draw-rectangle 94 y 25 1 29
+    draw-rectangle 94 y 24 1 29
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color 29 set heading 180]])
     ])
-  set ylist create-ylist 23 41
+  set ylist create-ylist 18 61
   (foreach ylist [ [y] ->
-    draw-rectangle 94 y 25 1 29
+    draw-rectangle 94 y 24 1 29
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color 29 set heading 180]])
     ])
 end
 to create-lime3
-  let ylist create-ylist 23 135
-  let peoplelist create-peoplelist 25 121
+  let ylist create-ylist 18 135
+  let peoplelist create-peoplelist 24 121
   (foreach ylist [ [y] ->
-    draw-rectangle 121 y 25 1 29
+    draw-rectangle 121 y 24 1 29
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color 29 set heading 180]])
     ])
-  set ylist create-ylist 23 88
+  set ylist create-ylist 18 98
   (foreach ylist [ [y] ->
-    draw-rectangle 121 y 25 1 29
+    draw-rectangle 121 y 24 1 29
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color 29 set heading 180]])
     ])
-  set ylist create-ylist 23 41
+  set ylist create-ylist 18 61
   (foreach ylist [ [y] ->
-    draw-rectangle 121 y 25 1 29
+    draw-rectangle 121 y 24 1 29
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color 29 set heading 180]])
     ])
 end
 
 to create-green1
-  let ylist create-ylist 23 135
-  let peoplelist create-peoplelist 25 148
+  let ylist create-ylist 18 135
+  let peoplelist create-peoplelist 24 148
   (foreach ylist [ [y] ->
-    draw-rectangle 148 y 25 1 green
+    draw-rectangle 148 y 24 1 green
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color green set heading 180]])
     ])
-  set ylist create-ylist 23 88
+  set ylist create-ylist 18 98
   (foreach ylist [ [y] ->
-    draw-rectangle 148 y 25 1 green
+    draw-rectangle 148 y 24 1 green
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color green set heading 180]])
     ])
-  set ylist create-ylist 23 41
+  set ylist create-ylist 18 61
   (foreach ylist [ [y] ->
-    draw-rectangle 148 y 25 1 green
+    draw-rectangle 148 y 24 1 green
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color green set heading 180]])
     ])
 end
 to create-green2
-  let ylist create-ylist 23 135
-  let peoplelist create-peoplelist 25 175
+  let ylist create-ylist 18 135
+  let peoplelist create-peoplelist 24 175
   (foreach ylist [ [y] ->
-    draw-rectangle 175 y 25 1 green
+    draw-rectangle 175 y 24 1 green
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color green set heading 180]])
     ])
-  set ylist create-ylist 23 88
+  set ylist create-ylist 18 98
   (foreach ylist [ [y] ->
-    draw-rectangle 175 y 25 1 green
+    draw-rectangle 175 y 24 1 green
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color green set heading 180]])
     ])
-  set ylist create-ylist 23 41
+  set ylist create-ylist 18 61
   (foreach ylist [ [y] ->
-    draw-rectangle 175 y 25 1 green
+    draw-rectangle 175 y 24 1 green
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color green set heading 180]])
     ])
 end
 to create-green3
-  let ylist create-ylist 23 135
-  let peoplelist create-peoplelist 25 202
+  let ylist create-ylist 18 135
+  let peoplelist create-peoplelist 24 202
   (foreach ylist [ [y] ->
-    draw-rectangle 202 y 25 1 green
+    draw-rectangle 202 y 24 1 green
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color green set heading 180]])
     ])
-  set ylist create-ylist 23 88
+  set ylist create-ylist 18 98
   (foreach ylist [ [y] ->
-    draw-rectangle 202 y 25 1 green
+    draw-rectangle 202 y 24 1 green
     (foreach peoplelist [ [ppl] -> create-survivors 1 [setxy ppl y set color green set heading 180]])
     ])
-  set ylist create-ylist 23 41
-  let wlist create-wlist 25
+  set ylist create-ylist 18 61
+  let wlist create-wlist 24
   (foreach ylist wlist [ [y w] ->
     draw-rectangle 202 y w 1 green
     set peoplelist create-peoplelist w 202
@@ -580,7 +586,7 @@ to-report create-ylist2 [input1 input2]
 end
 
 to-report create-xlist [input]
-  report n-values (23) [ [i] -> input + i * 1]
+  report n-values (18) [ [i] -> input + i * 1]
 end
 
 to-report create-ylist [input1 input2]
@@ -588,7 +594,7 @@ to-report create-ylist [input1 input2]
 end
 
 to-report create-wlist [input]
-  report n-values (23) [ [i] -> input - i * 1]
+  report n-values (18) [ [i] -> input - i * 1]
 end
 
 to-report create-peoplelist [input1 input2]
@@ -604,17 +610,17 @@ end
 
 to draw-leftbridge
   let xlist create-xlist2 -120
-  let ylist create-ylist2 14 -17
+  let ylist create-ylist2 14 13
   (foreach xlist ylist [ [x y] ->
-    draw-rectangle x y 25 1 white
+    draw-rectangle x y 24 1 white
     ])
 end
 
 to draw-rightbridge
   let xlist create-xlist3 94
-  let ylist create-ylist2 14 -17
+  let ylist create-ylist2 14 13
   (foreach xlist ylist [ [x y] ->
-    draw-rectangle x y 25 1 white
+    draw-rectangle x y 24 1 white
     ])
 end
 @#$#@#$#@
@@ -698,7 +704,7 @@ CHOOSER
 behaviour
 behaviour
 "normal" "follow"
-1
+0
 
 BUTTON
 33
