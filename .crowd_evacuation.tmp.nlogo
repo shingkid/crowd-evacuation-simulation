@@ -1,5 +1,5 @@
 globals [
-  countofalive
+  count-of-escapee
   fire-deaths
   stampede-deaths
 ]
@@ -11,14 +11,18 @@ patches-own [
   distance2
   distance3
   distance4
-  force-0
-  force-90
-  force-180
-  force-270
+  distance5
+  distance6
+  distance7
+  distance8
+  distance9
+  distance10
+  pforce
 ]
 
 survivors-own [
   goal
+  health
   speed  ; impacted by status and patch pressure (sum surrounding patch pressure)
   vision ;
   gender
@@ -34,23 +38,41 @@ survivors-own [
 to setup
   ca
   setup-stadium
-  create-doors 1 [setxy -125 19 set shape "square" set color blue set heading 180]
-  create-doors 1 [setxy -75 19 set shape "square" set color blue set heading 180]
-  create-doors 1 [setxy -25 19 set shape "square" set color blue set heading 180]
-  create-doors 1 [setxy 25 19 set shape "square" set color blue set heading 180]
+  create-doors 1 [setxy -176 17 set shape "square" set color blue set heading 180]
+  create-doors 1 [setxy -125 17 set shape "square" set color blue set heading 180]
+  create-doors 1 [setxy -95 17 set shape "square" set color blue set heading 180]
+  create-doors 1 [setxy -71 17 set shape "square" set color blue set heading 180]
+  create-doors 1 [setxy -41 17 set shape "square" set color blue set heading 180]
+  create-doors 1 [setxy 37 17 set shape "square" set color blue set heading 180]
+  create-doors 1 [setxy 66 17 set shape "square" set color blue set heading 180]
+  create-doors 1 [setxy 92 17 set shape "square" set color blue set heading 180]
+  create-doors 1 [setxy 120 17 set shape "square" set color blue set heading 180]
+  create-doors 1 [setxy 173 17 set shape "square" set color blue set heading 180]
   ask patches [set distance1 [distance myself] of door 14178]
   ask patches [set distance2 [distance myself] of door 14179]
   ask patches [set distance3 [distance myself] of door 14180]
   ask patches [set distance4 [distance myself] of door 14181]
+  ask patches [set distance5 [distance myself] of door 14182]
+  ask patches [set distance6 [distance myself] of door 14183]
+  ask patches [set distance7 [distance myself] of door 14184]
+  ask patches [set distance8 [distance myself] of door 14185]
+  ask patches [set distance9 [distance myself] of door 14186]
+  ask patches [set distance10 [distance myself] of door 14187]
   ;set goal
   ask survivors[
-    let shortest min (list distance1 distance2 distance3 distance4)
+    let shortest min (list distance1 distance2 distance3 distance4 distance5 distance6 distance7 distance8 distance9 distance10)
     if shortest = distance1 [set goal 1]
     if shortest = distance2 [set goal 2]
     if shortest = distance3 [set goal 3]
     if shortest = distance4 [set goal 4]
+    if shortest = distance5 [set goal 5]
+    if shortest = distance6 [set goal 6]
+    if shortest = distance7 [set goal 7]
+    if shortest = distance8 [set goal 8]
+    if shortest = distance9 [set goal 9]
+    if shortest = distance10 [set goal 10]
   ]
- set-survivors-attributes
+  set-survivors-attributes
   ; Start fire
   let origin one-of patches
   while [ [ pcolor ] of origin = black ] [
@@ -65,21 +87,22 @@ end
 
 to go
   spread-fire
-  ask patches [
-    set force-0 compute-force 0
-  ]
   ifelse behaviour = "normal"
   [ move-normal ]
   [ follow-crowd ]
+  ; Compute force exerted by survivors on each patch
+
+  ask survivors [
+    if compute-force patch-here >= health [
+      set stampede-deaths stampede-deaths + 1
+      die
+    ]
+ ]
+
   tick
 end
 
-to-report compute-force [ direction ]
-  ; Force exerted by survivors in the patch in direction
-  ; acceleration = (vFinal−vInitial)/(tFinal−tInitial)
-  ; Force = mass x acceleration
 
-end
 
 to spread-fire
   ask patches with [ pcolor = orange ] [
@@ -87,17 +110,12 @@ to spread-fire
       set pcolor orange
     ]
   ]
-
-  ;; Kill agents on patches which have caught fire
-  ask survivors [
-    if [ pcolor ] of patch-here = orange [
+  if [ pcolor ] of patch-here = orange [
       set fire-deaths fire-deaths + 1
-      die ]
+      die
   ]
   ;; kill exit door
-  ask doors [
-    if [ pcolor ] of patch-here = orange [ die ]
-  ]
+  ask doors [ if [pcolor] of patch-here = orange [die]]
 end
 
 to move-normal
@@ -107,20 +125,38 @@ to move-normal
     if goal = 2 [set next-patch min-one-of neighbors [distance2]]
     if goal = 3 [set next-patch min-one-of neighbors [distance3]]
     if goal = 4 [set next-patch min-one-of neighbors [distance4]]
+    if goal = 5 [set next-patch min-one-of neighbors [distance5]]
+    if goal = 6 [set next-patch min-one-of neighbors [distance6]]
+    if goal = 7 [set next-patch min-one-of neighbors [distance7]]
+    if goal = 8 [set next-patch min-one-of neighbors [distance8]]
+    if goal = 9 [set next-patch min-one-of neighbors [distance9]]
+    if goal = 10 [set next-patch min-one-of neighbors [distance10]]
     while [ [pcolor] of next-patch != grey][
       ask next-patch [
         set distance1 10000000
         set distance2 10000000
         set distance3 10000000
-        set distance4 10000000]
+        set distance4 10000000
+        set distance5 10000000
+        set distance6 10000000
+        set distance7 10000000
+        set distance8 10000000
+        set distance9 10000000
+        set distance10 10000000]
       if goal = 1 [set next-patch min-one-of neighbors [distance1]]
       if goal = 2 [set next-patch min-one-of neighbors [distance2]]
       if goal = 3 [set next-patch min-one-of neighbors [distance3]]
       if goal = 4 [set next-patch min-one-of neighbors [distance4]]
+      if goal = 5 [set next-patch min-one-of neighbors [distance5]]
+      if goal = 6 [set next-patch min-one-of neighbors [distance6]]
+      if goal = 7 [set next-patch min-one-of neighbors [distance7]]
+      if goal = 8 [set next-patch min-one-of neighbors [distance8]]
+      if goal = 9 [set next-patch min-one-of neighbors [distance9]]
+      if goal = 10 [set next-patch min-one-of neighbors [distance10]]
     ]
     move-to next-patch
     if any? doors-here[
-      set countofalive countofalive + 1
+      set count-of-escapee count-of-escapee + 1
       die ]
   ]
 ;  ;]
@@ -209,7 +245,16 @@ to set-survivors-attributes
       [ set speed random-float-between 4.51 4.75 ]
     ]
 
-    ; Mass
+     ; Mass
+    ifelse age = "child"
+    [ ifelse gender = "male"
+      [ set mass random-normal 40 4]
+      [ set mass random-normal 35 4]
+    ]
+    [ set mass random-normal 57.5 4 ]
+
+    ; Set health
+    set health mass * speed * threshold
   ]
 end
 
@@ -717,8 +762,8 @@ GRAPHICS-WINDOW
 250
 -135
 135
-0
-0
+1
+1
 1
 ticks
 1.0
@@ -798,13 +843,28 @@ NIL
 MONITOR
 68
 159
-149
+185
 204
-NIL
-countofalive
+Count of Escapees
+count-of-escapee
 17
 1
 11
+
+SLIDER
+25
+73
+197
+106
+threshold
+threshold
+1
+20
+12.0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
