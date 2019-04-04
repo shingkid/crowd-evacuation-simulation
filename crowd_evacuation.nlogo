@@ -169,9 +169,9 @@ to move-normal
       if goal = 9 [set next-patch min-one-of neighbors [distance9]]
       if goal = 10 [set next-patch min-one-of neighbors [distance10]]
     ]
-;    move-to next-patch
-    face next-patch
-    fd speed
+    move-to next-patch
+;    face next-patch
+;    fd speed
     if any? doors-here [
       set count-of-escapee count-of-escapee + 1
       die
@@ -758,24 +758,24 @@ to draw-rightbridge
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
+261
 10
-1902
-1103
+1581
+1062
 -1
 -1
-4.0
+3.85
 1
 10
 1
 1
 1
 0
+0
+0
 1
-1
-1
--210
-210
+-170
+170
 -135
 135
 1
@@ -868,7 +868,7 @@ HORIZONTAL
 PLOT
 5
 259
-205
+262
 409
 Survivors
 NIL
@@ -878,13 +878,13 @@ NIL
 0.0
 10.0
 true
-false
+true
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" "plot count survivors"
-"pen-1" 1.0 0 -7500403 true "" "plot count-of-escapee"
-"pen-2" 1.0 0 -2674135 true "" "plot stampede-deaths"
-"pen-3" 1.0 0 -955883 true "" "plot fire-deaths"
+"Survivors" 1.0 0 -16777216 true "" "plot count survivors"
+"Escapees" 1.0 0 -7500403 true "" "plot count-of-escapee"
+"Stampede" 1.0 0 -2674135 true "" "plot stampede-deaths"
+"Fire-deaths" 1.0 0 -955883 true "" "plot fire-deaths"
 
 MONITOR
 5
