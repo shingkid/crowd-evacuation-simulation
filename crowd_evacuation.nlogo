@@ -230,7 +230,9 @@ to move-normal
       if goal = 9 [set next-patch min-one-of neighbors [distance9]]
       if goal = 10 [set next-patch min-one-of neighbors [distance10]]
     ]
-    repeat speed [ move-to next-patch ]
+    repeat speed [
+      if not patch-overcrowded? next-patch [ move-to next-patch ]
+    ]
     if any? doors-here [
       ifelse color = blue
       [ set blue-escapees blue-escapees + 1]
@@ -372,6 +374,10 @@ end
 
 to-report random-float-between [ #min #max ]  ; random float in given range
   report #min + random-float (#max - #min)
+end
+
+to-report patch-overcrowded? [ p ]
+  report count turtles-on p >= 10
 end
 
 to draw-black
@@ -955,7 +961,7 @@ threshold
 threshold
 1
 20
-4.0
+20.0
 1
 1
 NIL
