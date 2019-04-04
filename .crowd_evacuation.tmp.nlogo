@@ -48,7 +48,7 @@ to setup
   ask patches [set distance10 [distance myself] of door 14187]
   ;set goal
   ask survivors[
-    let shortest min (list distance1 distance2 distance3 distance4 distance5 distance6 distance7 distance8 distance9 distance10)
+    let shortest min (list distance1 distance2 distance3 distance4 )
     if shortest = distance1 [set goal 1]
     if shortest = distance2 [set goal 2]
     if shortest = distance3 [set goal 3]
