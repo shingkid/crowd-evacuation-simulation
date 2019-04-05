@@ -909,10 +909,10 @@ ticks
 1.0
 
 BUTTON
-5
-414
-71
-447
+4
+450
+70
+483
 NIL
 setup
 NIL
@@ -926,10 +926,10 @@ NIL
 1
 
 BUTTON
-76
-414
-139
-447
+75
+450
+138
+483
 NIL
 go
 NIL
@@ -943,10 +943,10 @@ NIL
 1
 
 MONITOR
-5
-103
-117
-148
+4
+139
+116
+184
 No. of survivors
 count survivors
 17
@@ -954,20 +954,20 @@ count survivors
 11
 
 CHOOSER
-4
-10
-142
-55
+3
+46
+141
+91
 behaviour
 behaviour
 "smart" "follow"
 0
 
 MONITOR
-4
-153
-72
-198
+3
+189
+71
+234
 Total Escapees
 blue-escapees + cyan-escapees + yellow-escapees + red-escapees + beige-escapees + green-escapees
 17
@@ -975,25 +975,25 @@ blue-escapees + cyan-escapees + yellow-escapees + red-escapees + beige-escapees 
 11
 
 SLIDER
-5
-63
-177
-96
+4
+99
+176
+132
 threshold
 threshold
-1
-20
-20.0
-1
+10
+100
+50.0
+10
 1
 NIL
 HORIZONTAL
 
 PLOT
-5
-259
-262
-409
+4
+295
+261
+445
 Survivors
 NIL
 NIL
@@ -1011,10 +1011,10 @@ PENS
 "Fire-deaths" 1.0 0 -955883 true "" "plot blue-fire-deaths + cyan-fire-deaths + yellow-fire-deaths + red-fire-deaths + beige-fire-deaths + green-fire-deaths"
 
 MONITOR
-5
-207
-79
-252
+4
+243
+78
+288
 Fire victims
 blue-fire-deaths + cyan-fire-deaths + yellow-fire-deaths + red-fire-deaths + beige-fire-deaths + green-fire-deaths
 17
@@ -1022,10 +1022,10 @@ blue-fire-deaths + cyan-fire-deaths + yellow-fire-deaths + red-fire-deaths + bei
 11
 
 MONITOR
-86
-207
-196
-252
+85
+243
+195
+288
 Stampede victims
 blue-stampede-deaths + cyan-stampede-deaths + yellow-stampede-deaths + red-stampede-deaths + beige-stampede-deaths + green-stampede-deaths
 17
@@ -1033,10 +1033,10 @@ blue-stampede-deaths + cyan-stampede-deaths + yellow-stampede-deaths + red-stamp
 11
 
 BUTTON
-5
-451
-166
-484
+4
+487
+165
+520
 go until no survivors
 while [count survivors > 0 ] [ go ]
 NIL
@@ -1050,10 +1050,10 @@ NIL
 1
 
 MONITOR
-79
-153
-181
-198
+78
+189
+180
+234
 Available Exits
 count doors
 17
@@ -1061,10 +1061,10 @@ count doors
 11
 
 PLOT
-7
-496
-252
-646
+3
+574
+248
+724
 Escapees by Color
 NIL
 NIL
@@ -1084,10 +1084,10 @@ PENS
 "green" 1.0 0 -10899396 true "" "plot green-escapees"
 
 PLOT
-7
-654
-249
-804
+3
+732
+245
+882
 Stampede victims by Color
 NIL
 NIL
@@ -1107,10 +1107,10 @@ PENS
 "green" 1.0 0 -10899396 true "" "plot green-stampede-deaths"
 
 PLOT
-6
-812
-249
-962
+2
+890
+245
+1040
 Fire victims by Color
 NIL
 NIL
@@ -1128,6 +1128,54 @@ PENS
 "yellow" 1.0 0 -1184463 true "" "plot yellow-fire-deaths"
 "beige" 1.0 0 -204336 true "" "plot beige-fire-deaths"
 "green" 1.0 0 -10899396 true "" "plot green-fire-deaths"
+
+SLIDER
+3
+10
+175
+43
+max-vision
+max-vision
+10
+50
+20.0
+1
+1
+NIL
+HORIZONTAL
+
+MONITOR
+3
+524
+118
+569
+Average panic level
+precision mean [panic] of survivors 5
+17
+1
+11
+
+MONITOR
+122
+524
+258
+569
+Top speed (m/s)
+precision max [speed] of survivors 3
+17
+1
+11
+
+SWITCH
+147
+50
+259
+83
+use-panic?
+use-panic?
+1
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
