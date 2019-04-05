@@ -17,6 +17,7 @@ globals [
   red-stampede-deaths
   beige-stampede-deaths
   green-stampede-deaths
+  oldgoal
 ]
 breed [survivors survivor]
 breed[doors door]
@@ -36,6 +37,7 @@ patches-own [
 survivors-own [
   goal
   health
+  base-speed
   speed  ; impacted by status and patch pressure (sum surrounding patch pressure)
   vision
   gender
@@ -100,11 +102,32 @@ end
 
 to go
   spread-fire
+
+  if use-panic? [
+    ask survivors [
+      if is-patch? patch-at-heading-and-distance (180 + heading) vision [
+        if [pcolor] of patch-ahead vision = orange or [pcolor] of patch-at-heading-and-distance (180 + heading) vision = orange [
+          set panic 2
+          set speed 1.8056 ; 6.5km/h = 1.8056m/s
+        ]
+      ]
+
+      if is-patch? patch-at-heading-and-distance (180 + heading) (vision / 2) [
+        if [pcolor] of patch-ahead (vision / 2) = orange or [pcolor] of patch-at-heading-and-distance (180 + heading) (vision / 2) = orange [
+          set panic 3
+          set speed 2.5 ; 9km/h = 2.5m/s
+        ]
+      ]
+
+      ;    set speed base-speed * panic
+    ]
+  ]
+
   ifelse behaviour = "smart"
   [ move-normal ]
   [ follow-crowd ]
-  ; Compute force exerted by survivors on each patch
 
+  ; Compute force exerted by survivors on each patch
   ask survivors [
     if compute-force patch-here >= health [
       ifelse color = blue
@@ -124,7 +147,7 @@ to go
       ]
       die
     ]
- ]
+  ]
 
   tick
 end
@@ -170,8 +193,23 @@ to spread-fire
   ]
 
   ;; kill exit door
+  set oldgoal FALSE
   ask doors [
-    if [ pcolor ] of patch-here = orange [ die ]
+    if [ pcolor ] of patch-here = orange [set oldgoal true
+      die ]
+  ]
+  let shortest 0
+  ask survivors [ set shortest min-one-of doors [distance myself]
+    if shortest = door 14178 [set goal 1]
+    if shortest = door 14179 [set goal 2]
+    if shortest = door 14180 [set goal 3]
+    if shortest = door 14181 [set goal 4]
+    if shortest = door 14182 [set goal 5]
+    if shortest = door 14183 [set goal 6]
+    if shortest = door 14184 [set goal 7]
+    if shortest = door 14185 [set goal 8]
+    if shortest = door 14186 [set goal 9]
+    if shortest = door 14187 [set goal 10]
   ]
 end
 
@@ -188,31 +226,34 @@ to move-normal
     if goal = 8 [set next-patch min-one-of neighbors [distance8]]
     if goal = 9 [set next-patch min-one-of neighbors [distance9]]
     if goal = 10 [set next-patch min-one-of neighbors [distance10]]
-    while [ [pcolor] of next-patch != grey] [
-      ask next-patch [
-        set distance1 10000000
-        set distance2 10000000
-        set distance3 10000000
-        set distance4 10000000
-        set distance5 10000000
-        set distance6 10000000
-        set distance7 10000000
-        set distance8 10000000
-        set distance9 10000000
-        set distance10 10000000
+    repeat speed [
+      while [ [pcolor] of next-patch != grey] [
+        ask next-patch [
+          set distance1 10000000
+          set distance2 10000000
+          set distance3 10000000
+          set distance4 10000000
+          set distance5 10000000
+          set distance6 10000000
+          set distance7 10000000
+          set distance8 10000000
+          set distance9 10000000
+          set distance10 10000000
+        ]
+        if goal = 1 [set next-patch min-one-of neighbors [distance1]]
+        if goal = 2 [set next-patch min-one-of neighbors [distance2]]
+        if goal = 3 [set next-patch min-one-of neighbors [distance3]]
+        if goal = 4 [set next-patch min-one-of neighbors [distance4]]
+        if goal = 5 [set next-patch min-one-of neighbors [distance5]]
+        if goal = 6 [set next-patch min-one-of neighbors [distance6]]
+        if goal = 7 [set next-patch min-one-of neighbors [distance7]]
+        if goal = 8 [set next-patch min-one-of neighbors [distance8]]
+        if goal = 9 [set next-patch min-one-of neighbors [distance9]]
+        if goal = 10 [set next-patch min-one-of neighbors [distance10]]
       ]
-      if goal = 1 [set next-patch min-one-of neighbors [distance1]]
-      if goal = 2 [set next-patch min-one-of neighbors [distance2]]
-      if goal = 3 [set next-patch min-one-of neighbors [distance3]]
-      if goal = 4 [set next-patch min-one-of neighbors [distance4]]
-      if goal = 5 [set next-patch min-one-of neighbors [distance5]]
-      if goal = 6 [set next-patch min-one-of neighbors [distance6]]
-      if goal = 7 [set next-patch min-one-of neighbors [distance7]]
-      if goal = 8 [set next-patch min-one-of neighbors [distance8]]
-      if goal = 9 [set next-patch min-one-of neighbors [distance9]]
-      if goal = 10 [set next-patch min-one-of neighbors [distance10]]
+
+      if not patch-overcrowded? next-patch [ move-to next-patch ]
     ]
-    repeat speed [ move-to next-patch ]
     if any? doors-here [
       ifelse color = blue
       [ set blue-escapees blue-escapees + 1]
@@ -235,36 +276,36 @@ to move-normal
 end
 
 to follow-crowd
-  ask turtles[
-    let patchAhead patch-ahead 1
-    ifelse ( [pcolor] of patchAhead = grey or [pcolor] of patchAhead = white)
-    [
-      fd speed
-    ]
-    [
-      let dice random 1
-;      print dice
-      ifelse (dice < 1)
-      [
-        rt 90
-      ]
-      [
-        lt 90
-      ]
-      ask patches in-cone 1 30
-      [
-        if (pcolor = grey or pcolor = white)
-        [
-          ask myself
-          [
-            let closest-person min-one-of (other turtles) [distance myself]
-;            set heading closest-person
-            fd speed
-          ]
-        ]
-      ]
-    ]
-  ]
+;  ask turtles[
+;    let patchAhead patch-ahead 1
+;    ifelse ( [pcolor] of patchAhead = grey or [pcolor] of patchAhead = white)
+;    [
+;      fd speed
+;    ]
+;    [
+;      let dice random 1
+;;      print dice
+;      ifelse (dice < 1)
+;      [
+;        rt 90
+;      ]
+;      [
+;        lt 90
+;      ]
+;      ask patches in-cone 1 30
+;      [
+;        if (pcolor = grey or pcolor = white)
+;        [
+;          ask myself
+;          [
+;            let closest-person min-one-of (other turtles) [distance myself]
+;;            set heading closest-person
+;            fd speed
+;          ]
+;        ]
+;      ]
+;    ]
+;  ]
 end
 
 to setup-stadium
@@ -298,23 +339,34 @@ end
 
 to set-survivors-attributes
   ask survivors [
+    ; Set gender
     ifelse random-float 1.0 < 0.5
     [ set gender "male" ]
     [ set gender "female" ]
 
+    ; Set age
     ifelse random-float 1.0 <= 0.1498
     [ set age "child" ]
     [ ifelse random-float 1.0 < 0.8708
       [ set age "adult" ]
       [ set age "elderly" ]
     ]
+;    set age random-normal 42.4 20
 
+    ; Set base speed
     ifelse age = "child"
-    [ set speed 1.4 ]
+    [ set base-speed 0.3889 ] ; 1.4km/h = 0.38889m/s
     [ ifelse age = "adult"
-      [ set speed random-float-between 5.32 5.43 ]
-      [ set speed random-float-between 4.51 4.75 ]
+      [ set base-speed random-float-between 1.4778 1.5083 ] ; 5.32km/h = 1.4778m/s and 5.43km/h = 1.5083m/s
+      [ set base-speed random-float-between 1.2528 1.3194 ] ; 4.51km/h = 1.2528m/s and 4.75km/h = 1.3194m/s
     ]
+    set speed base-speed
+;    ifelse age < 15
+;    [ set speed 1.4 ]
+;    [ ifelse age < 65
+;      [ set speed random-float-between 5.32 5.43 ]
+;      [ set speed random-float-between 4.51 4.75 ]
+;    ]
 
     ; Set mass
     ifelse age = "child"
@@ -323,14 +375,31 @@ to set-survivors-attributes
       [ set mass random-normal 35 4]
     ]
     [ set mass random-normal 57.5 4 ]
+;    ifelse age < 15
+;    [ ifelse gender = "male"
+;      [ set mass random-normal 40 4]
+;      [ set mass random-normal 35 4]
+;    ]
+;    [ set mass random-normal 57.5 4 ]
 
     ; Set health
     set health mass * speed * threshold
+;    show health
+
+    ; Set vision
+    set vision random max-vision
+
+    ; Set panic level
+    set panic 1
   ]
 end
 
 to-report random-float-between [ #min #max ]  ; random float in given range
   report #min + random-float (#max - #min)
+end
+
+to-report patch-overcrowded? [ p ]
+  report count turtles-on p >= 10
 end
 
 to draw-black
