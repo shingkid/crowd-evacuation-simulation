@@ -32,6 +32,7 @@ patches-own [
   distance8
   distance9
   distance10
+  distancefire
 ]
 
 survivors-own [
@@ -53,16 +54,12 @@ survivors-own [
 to setup
   ca
   setup-stadium
-  create-doors 1 [setxy -127 21 set shape "square" set color lime set heading 180 set size 2]
-  create-doors 1 [setxy -87 21 set shape "square" set color lime set heading 180 set size 2]
-  create-doors 1 [setxy -70 21 set shape "square" set color lime set heading 180 set size 2]
-  create-doors 1 [setxy -49 21 set shape "square" set color lime set heading 180 set size 2]
-  create-doors 1 [setxy -33 21 set shape "square" set color lime set heading 180 set size 2]
-  create-doors 1 [setxy 27 21 set shape "square" set color lime set heading 180 set size 2]
-  create-doors 1 [setxy 44 21 set shape "square" set color lime set heading 180 set size 2]
-  create-doors 1 [setxy 65 21 set shape "square" set color lime set heading 180 set size 2]
-  create-doors 1 [setxy 82 21 set shape "square" set color lime set heading 180 set size 2]
-  create-doors 1 [setxy 122 21 set shape "square" set color lime set heading 180 set size 2]
+  ;create 10 exits
+  let door-xlist [-127 -87 -70 -49 -33 27 44 65 82 122]
+  (foreach door-xlist[ [x] ->
+     create-doors 1 [setxy x 21 set shape "square" set color lime set heading 180 set size 2]
+    ])
+
   ask patches [set distance1 [distance myself] of door 14178]
   ask patches [set distance2 [distance myself] of door 14179]
   ask patches [set distance3 [distance myself] of door 14180]
@@ -75,34 +72,25 @@ to setup
   ask patches [set distance10 [distance myself] of door 14187]
   ;set goal
   ask survivors[
-    let shortest min (list distance1 distance2 distance3 distance4 distance5 distance6 distance7 distance8 distance9 distance10)
-    if shortest = distance1 [set goal 1]
-    if shortest = distance2 [set goal 2]
-    if shortest = distance3 [set goal 3]
-    if shortest = distance4 [set goal 4]
-    if shortest = distance5 [set goal 5]
-    if shortest = distance6 [set goal 6]
-    if shortest = distance7 [set goal 7]
-    if shortest = distance8 [set goal 8]
-    if shortest = distance9 [set goal 9]
-    if shortest = distance10 [set goal 10]
+    set goal min-one-of doors [distance myself]
   ]
   set-survivors-attributes
   ; Start fire
-  let origin one-of patches
+  let origin patch 0 135
   while [ [ pcolor ] of origin = black ] [
     set origin one-of patches
   ]
   ask origin [
     draw-rectangle pxcor pycor 5 5 orange
   ]
+  ask patches [set distancefire distancexy 0 135]
 
   reset-ticks
 end
 
 to go
   spread-fire
-
+  ;ask patches [set distancefire min [distance myself] of patches with  [pcolor = orange]]
   if use-panic? [
     ask survivors [
       if is-patch? patch-at-heading-and-distance (180 + heading) vision [
@@ -198,34 +186,24 @@ to spread-fire
     if [ pcolor ] of patch-here = orange [set oldgoal true
       die ]
   ]
-  let shortest 0
-  ask survivors [ set shortest min-one-of doors [distance myself]
-    if shortest = door 14178 [set goal 1]
-    if shortest = door 14179 [set goal 2]
-    if shortest = door 14180 [set goal 3]
-    if shortest = door 14181 [set goal 4]
-    if shortest = door 14182 [set goal 5]
-    if shortest = door 14183 [set goal 6]
-    if shortest = door 14184 [set goal 7]
-    if shortest = door 14185 [set goal 8]
-    if shortest = door 14186 [set goal 9]
-    if shortest = door 14187 [set goal 10]
+;  let shortest 0
+  ask survivors [ set goal min-one-of doors [distance myself]
   ]
 end
 
 to move-normal
   ask survivors [
     let next-patch 0
-    if goal = 1 [set next-patch min-one-of neighbors [distance1]]
-    if goal = 2 [set next-patch min-one-of neighbors [distance2]]
-    if goal = 3 [set next-patch min-one-of neighbors [distance3]]
-    if goal = 4 [set next-patch min-one-of neighbors [distance4]]
-    if goal = 5 [set next-patch min-one-of neighbors [distance5]]
-    if goal = 6 [set next-patch min-one-of neighbors [distance6]]
-    if goal = 7 [set next-patch min-one-of neighbors [distance7]]
-    if goal = 8 [set next-patch min-one-of neighbors [distance8]]
-    if goal = 9 [set next-patch min-one-of neighbors [distance9]]
-    if goal = 10 [set next-patch min-one-of neighbors [distance10]]
+    ifelse goal = door 14178 [set next-patch min-one-of neighbors [distance1]] [
+      ifelse goal = door 14179 [set next-patch min-one-of neighbors [distance2]] [
+        ifelse goal = door 14180 [set next-patch min-one-of neighbors [distance3]] [
+          ifelse goal = door 14181 [set next-patch min-one-of neighbors [distance4]] [
+            ifelse goal = door 14182 [set next-patch min-one-of neighbors [distance5]] [
+              ifelse goal = door 14183 [set next-patch min-one-of neighbors [distance6]] [
+                ifelse goal = door 14184 [set next-patch min-one-of neighbors [distance7]] [
+                  ifelse goal = door 14185 [set next-patch min-one-of neighbors [distance8]] [
+                    ifelse goal = door 14186 [set next-patch min-one-of neighbors [distance9]] [
+                      ifelse goal = door 14187 [set next-patch min-one-of neighbors [distance10]] []]]]]]]]]]
     repeat speed [
       while [ [pcolor] of next-patch != grey] [
         ask next-patch [
@@ -240,16 +218,16 @@ to move-normal
           set distance9 10000000
           set distance10 10000000
         ]
-        if goal = 1 [set next-patch min-one-of neighbors [distance1]]
-        if goal = 2 [set next-patch min-one-of neighbors [distance2]]
-        if goal = 3 [set next-patch min-one-of neighbors [distance3]]
-        if goal = 4 [set next-patch min-one-of neighbors [distance4]]
-        if goal = 5 [set next-patch min-one-of neighbors [distance5]]
-        if goal = 6 [set next-patch min-one-of neighbors [distance6]]
-        if goal = 7 [set next-patch min-one-of neighbors [distance7]]
-        if goal = 8 [set next-patch min-one-of neighbors [distance8]]
-        if goal = 9 [set next-patch min-one-of neighbors [distance9]]
-        if goal = 10 [set next-patch min-one-of neighbors [distance10]]
+        ifelse goal = door 14178 [set next-patch min-one-of neighbors [distance1]] [
+          ifelse goal = door 14179 [set next-patch min-one-of neighbors [distance2]] [
+            ifelse goal = door 14180 [set next-patch min-one-of neighbors [distance3]] [
+              ifelse goal = door 14181 [set next-patch min-one-of neighbors [distance4]] [
+                ifelse goal = door 14182 [set next-patch min-one-of neighbors [distance5]] [
+                  ifelse goal = door 14183 [set next-patch min-one-of neighbors [distance6]] [
+                    ifelse goal = door 14184 [set next-patch min-one-of neighbors [distance7]] [
+                      ifelse goal = door 14185 [set next-patch min-one-of neighbors [distance8]] [
+                        ifelse goal = door 14186 [set next-patch min-one-of neighbors [distance9]] [
+                          ifelse goal = door 14187 [set next-patch min-one-of neighbors [distance10]] []]]]]]]]]]
       ]
 
       if not patch-overcrowded? next-patch [ move-to next-patch ]
@@ -276,36 +254,82 @@ to move-normal
 end
 
 to follow-crowd
-;  ask turtles[
-;    let patchAhead patch-ahead 1
-;    ifelse ( [pcolor] of patchAhead = grey or [pcolor] of patchAhead = white)
-;    [
-;      fd speed
-;    ]
-;    [
-;      let dice random 1
-;;      print dice
-;      ifelse (dice < 1)
-;      [
-;        rt 90
-;      ]
-;      [
-;        lt 90
-;      ]
-;      ask patches in-cone 1 30
-;      [
-;        if (pcolor = grey or pcolor = white)
-;        [
-;          ask myself
-;          [
-;            let closest-person min-one-of (other turtles) [distance myself]
-;;            set heading closest-person
-;            fd speed
-;          ]
-;        ]
-;      ]
-;    ]
-;  ]
+  ;ask patches [set distancefire distance (min-one-of patches with [pcolor = orange] [distance myself]) ]
+  ask survivors [
+
+    let next-patch 0
+    ifelse any? patches in-radius vision with [any? doors-here] [
+          set goal min-one-of doors [distance myself]
+          ifelse goal = door 14178 [set next-patch min-one-of neighbors [distance1]] [
+            ifelse goal = door 14179 [set next-patch min-one-of neighbors [distance2]] [
+              ifelse goal = door 14180 [set next-patch min-one-of neighbors [distance3]] [
+                ifelse goal = door 14181 [set next-patch min-one-of neighbors [distance4]] [
+                  ifelse goal = door 14182 [set next-patch min-one-of neighbors [distance5]] [
+                    ifelse goal = door 14183 [set next-patch min-one-of neighbors [distance6]] [
+                      ifelse goal = door 14184 [set next-patch min-one-of neighbors [distance7]] [
+                        ifelse goal = door 14185 [set next-patch min-one-of neighbors [distance8]] [
+                          ifelse goal = door 14186 [set next-patch min-one-of neighbors [distance9]] [
+                            ifelse goal = door 14187 [set next-patch min-one-of neighbors [distance10]] []]]]]]]]]]
+
+
+          while [ [pcolor] of next-patch != grey] [
+            ask next-patch [
+              set distance1 10000000
+              set distance2 10000000
+              set distance3 10000000
+              set distance4 10000000
+              set distance5 10000000
+              set distance6 10000000
+              set distance7 10000000
+              set distance8 10000000
+              set distance9 10000000
+              set distance10 10000000
+            ]
+            ifelse goal = door 14178 [set next-patch min-one-of neighbors [distance1]] [
+              ifelse goal = door 14179 [set next-patch min-one-of neighbors [distance2]] [
+                ifelse goal = door 14180 [set next-patch min-one-of neighbors [distance3]] [
+                  ifelse goal = door 14181 [set next-patch min-one-of neighbors [distance4]] [
+                    ifelse goal = door 14182 [set next-patch min-one-of neighbors [distance5]] [
+                      ifelse goal = door 14183 [set next-patch min-one-of neighbors [distance6]] [
+                        ifelse goal = door 14184 [set next-patch min-one-of neighbors [distance7]] [
+                          ifelse goal = door 14185 [set next-patch min-one-of neighbors [distance8]] [
+                            ifelse goal = door 14186 [set next-patch min-one-of neighbors [distance9]] [
+                              ifelse goal = door 14187 [set next-patch min-one-of neighbors [distance10]] []]]]]]]]]]
+
+          ]
+      ][
+      ifelse is-patch? patch-at-heading-and-distance (180 + heading) vision and is-patch? patch-at-heading-and-distance (90 + heading) vision and is-patch? patch-at-heading-and-distance (270 + heading) vision [
+        ifelse [pcolor] of patch-ahead vision = orange or [pcolor] of patch-at-heading-and-distance (180 + heading) vision = orange or [pcolor] of patch-at-heading-and-distance (90 + heading) vision = orange or [pcolor] of patch-at-heading-and-distance (270 + heading) vision = orange [
+          set next-patch max-one-of neighbors [distancefire]
+          while [ [pcolor] of next-patch != grey] [
+            ask next-patch [set distancefire 0]
+            set next-patch max-one-of neighbors [distancefire]
+          ]
+          if not patch-overcrowded? next-patch [ move-to next-patch ]
+        ][
+          if any? turtles-on neighbors [
+            let avg mean [heading] of turtles-on neighbors
+            ifelse avg <= 90 [set heading 90][
+              ifelse avg <= 180 [set heading 180][
+                ifelse avg <= 270 [set heading 270][
+                  set heading 0
+                ]
+              ]
+            ]
+
+            if [pcolor] of patch-ahead 1 = gray [fd 1]
+          ]
+        ]
+
+      ][]
+
+
+    ]
+
+
+]
+
+
 end
 
 to setup-stadium
@@ -402,53 +426,6 @@ to-report patch-overcrowded? [ p ]
   report count turtles-on p >= 10
 end
 
-to draw-black
-  draw-rectangle -180 39 1 44 black
-  draw-rectangle -229 37 1 42 black
-  draw-rectangle -228 35 1 40 black
-  draw-rectangle -227 33 1 38 black
-  draw-rectangle -226 31 1 36 black
-  draw-rectangle -225 29 1 34 black
-  draw-rectangle -224 27 1 32 black
-  draw-rectangle -218 25 1 30 black
-  ;draw-rectangle -222 lol 1 28 black ; 18
-  draw-rectangle -221 21 1 26 black
-  draw-rectangle -220 19 1 24 black
-  draw-rectangle -219 17 1 22 black
-  draw-rectangle -218 15 1 20 black
-  draw-rectangle -217 13 1 18 black
-  draw-rectangle -216 11 1 16 black
-  draw-rectangle -215 9 1 14 black
-  draw-rectangle -214 7 1 12 black
-  draw-rectangle -213 5 1 10 black
-  draw-rectangle -212 3 1 8 black
-  draw-rectangle -211 1 1 6 black
-  draw-rectangle -210 -1 1 4 black
-  draw-rectangle -209 -3 1 2 black
-  draw-rectangle 226 39 1 44 black
-  draw-rectangle 225 37 1 42 black
-  draw-rectangle 224 35 1 40 black
-  draw-rectangle 218 33 1 38 black
-  draw-rectangle 222 31 1 36 black
-  draw-rectangle 221 29 1 34 black
-  draw-rectangle 220 27 1 32 black
-  draw-rectangle 219 25 1 30 black
-  ;draw-rectangle 218 lol 1 28 black ;18
-  draw-rectangle 217 21 1 26 black
-  draw-rectangle 216 19 1 24 black
-  draw-rectangle 215 17 1 22 black
-  draw-rectangle 214 15 1 20 black
-  draw-rectangle 213 13 1 18 black
-  draw-rectangle 212 11 1 16 black
-  draw-rectangle 211 9 1 14 black
-  draw-rectangle 210 7 1 12 black
-  draw-rectangle 209 5 1 10 black
-  draw-rectangle 208 3 1 8 black
-  draw-rectangle 207 1 1 6 black
-  draw-rectangle 206 -1 1 4 black
-  draw-rectangle 205 -3 1 2 black
-
-end
 
 to create-stairs1
   let xlist create-xlist4 82
@@ -961,7 +938,7 @@ CHOOSER
 behaviour
 behaviour
 "smart" "follow"
-0
+1
 
 MONITOR
 3
@@ -983,7 +960,7 @@ threshold
 threshold
 10
 100
-50.0
+60.0
 10
 1
 NIL
@@ -1138,7 +1115,7 @@ max-vision
 max-vision
 10
 50
-20.0
+25.0
 1
 1
 NIL
@@ -1173,7 +1150,7 @@ SWITCH
 83
 use-panic?
 use-panic?
-1
+0
 1
 -1000
 
