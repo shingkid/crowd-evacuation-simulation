@@ -420,7 +420,7 @@ end
 to set-survivors-attributes
   ask survivors [
     ; Set gender
-    ifelse random-float 1.0 < 0.5
+    ifelse random-float 1.0 < 0.4805
     [ set gender "male" ]
     [ set gender "female" ]
 
@@ -454,14 +454,7 @@ to set-survivors-attributes
       [ set mass random-normal 40 4]
       [ set mass random-normal 35 4]
     ]
-    [ set mass random-normal 57.5 4 ]
-;    ifelse age < 15
-;    [ ifelse gender = "male"
-;      [ set mass random-normal 40 4]
-;      [ set mass random-normal 35 4]
-;    ]
-;    [ set mass random-normal 57.5 4 ]
-
+    [ set mass random-normal 57.7 4 ]
     ; Set health
     set health mass * speed * threshold
 ;    show health
@@ -479,7 +472,7 @@ to-report random-float-between [ #min #max ]  ; random float in given range
 end
 
 to-report patch-overcrowded? [ p ]
-  report count turtles-on p >= 10
+  report count turtles-on p > 10
 end
 
 
@@ -1172,7 +1165,7 @@ max-vision
 20
 100
 50.0
-1
+5
 1
 NIL
 HORIZONTAL
