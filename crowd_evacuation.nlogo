@@ -77,8 +77,11 @@ to setup
   set-survivors-attributes
   ; Start fire
   let origin patch 0 135
-  while [ [ pcolor ] of origin = black ] [
-    set origin one-of patches
+  if random-fire? [
+    set origin patch random-xcor random-ycor
+    while [ [ pcolor ] of origin = black ] [
+      set origin one-of patches
+    ]
   ]
   ask origin [
     draw-rectangle pxcor pycor 5 5 orange
@@ -152,11 +155,14 @@ to-report compute-force [ p ]
 end
 
 to spread-fire
-  ask patches with [ pcolor = orange ] [
-    ask neighbors with [ pcolor != black ] [
-      set pcolor orange
+  ; Too slow
+;  if ticks mod 2 = 0 [
+    ask patches with [ pcolor = orange ] [
+      ask neighbors with [ pcolor != black ] [
+        set pcolor orange
+      ]
     ]
-  ]
+;  ]
 
   ask survivors [
     ;; Kill survivors on patches which have caught fire
@@ -983,7 +989,7 @@ true
 "" ""
 PENS
 "Survivors" 1.0 0 -16777216 true "" "plot count survivors"
-"Escapees" 1.0 0 -7500403 true "" "plot blue-escapees + cyan-escapees + yellow-escapees + red-escapees + beige-escapees + green-escapees"
+"Escapees" 1.0 0 -13840069 true "" "plot blue-escapees + cyan-escapees + yellow-escapees + red-escapees + beige-escapees + green-escapees"
 "Stampede" 1.0 0 -2674135 true "" "plot blue-stampede-deaths + cyan-stampede-deaths + yellow-stampede-deaths + red-stampede-deaths + beige-stampede-deaths + green-stampede-deaths"
 "Fire-deaths" 1.0 0 -955883 true "" "plot blue-fire-deaths + cyan-fire-deaths + yellow-fire-deaths + red-fire-deaths + beige-fire-deaths + green-fire-deaths"
 
@@ -1015,8 +1021,8 @@ BUTTON
 165
 520
 go until no survivors
-while [count survivors > 0 ] [ go ]
-NIL
+go\nif count survivors = 0 [ stop ]
+T
 1
 T
 OBSERVER
@@ -1038,10 +1044,10 @@ count doors
 11
 
 PLOT
-3
-574
-248
-724
+6
+733
+251
+883
 Escapees by Color
 NIL
 NIL
@@ -1061,10 +1067,10 @@ PENS
 "green" 1.0 0 -10899396 true "" "plot green-escapees"
 
 PLOT
-3
-732
-245
-882
+6
+891
+248
+1041
 Stampede victims by Color
 NIL
 NIL
@@ -1084,10 +1090,10 @@ PENS
 "green" 1.0 0 -10899396 true "" "plot green-stampede-deaths"
 
 PLOT
-2
-890
-245
-1040
+5
+1049
+248
+1199
 Fire victims by Color
 NIL
 NIL
@@ -1153,6 +1159,40 @@ use-panic?
 0
 1
 -1000
+
+SWITCH
+124
+144
+249
+177
+random-fire?
+random-fire?
+1
+1
+-1000
+
+PLOT
+6
+576
+206
+726
+Average panic level
+NIL
+NIL
+0.0
+10.0
+1.0
+3.0
+true
+true
+"" ""
+PENS
+"blue" 1.0 0 -13345367 true "" "plot mean [ panic ] of survivors with [ color = blue ]"
+"cyan" 1.0 0 -11221820 true "" "plot mean [ panic ] of survivors with [ color = cyan ]"
+"yellow" 1.0 0 -1184463 true "" "plot mean [ panic ] of survivors with [ color = yellow ]"
+"red" 1.0 0 -2674135 true "" "plot mean [ panic ] of survivors with [ color = red ]"
+"beige" 1.0 0 -204336 true "" "plot mean [ panic ] of survivors with [ color = 29 ]"
+"green" 1.0 0 -10899396 true "" "plot mean [ panic ] of survivors with [ color = green ]"
 
 @#$#@#$#@
 ## WHAT IS IT?
