@@ -17,6 +17,21 @@ globals [
   red-stampede-deaths
   beige-stampede-deaths
   green-stampede-deaths
+  female-escapees
+  female-fire-deaths
+  female-stampede-deaths
+  male-escapees
+  male-fire-deaths
+  male-stampede-deaths
+  child-escapees
+  child-fire-deaths
+  child-stampede-deaths
+  adult-escapees
+  adult-fire-deaths
+  adult-stampede-deaths
+  elderly-escapees
+  elderly-fire-deaths
+  elderly-stampede-deaths
   oldgoal
 ]
 breed [survivors survivor]
@@ -136,6 +151,18 @@ to go
           ]
         ]
       ]
+
+      ifelse gender = "female"
+      [ set female-stampede-deaths female-stampede-deaths + 1 ]
+      [ set male-stampede-deaths male-stampede-deaths + 1 ]
+
+      ifelse age = "child"
+      [ set child-stampede-deaths child-stampede-deaths + 1 ]
+      [ ifelse age = "adult"
+        [ set adult-stampede-deaths adult-stampede-deaths + 1 ]
+        [ set elderly-stampede-deaths elderly-stampede-deaths + 1 ]
+      ]
+
       die
     ]
   ]
@@ -155,14 +182,14 @@ to-report compute-force [ p ]
 end
 
 to spread-fire
-  ; Too slow
-;  if ticks mod 2 = 0 [
+  ; Fire expands every 2 seconds
+  if ticks mod 10 = 0 [
     ask patches with [ pcolor = orange ] [
       ask neighbors with [ pcolor != black ] [
         set pcolor orange
       ]
     ]
-;  ]
+  ]
 
   ask survivors [
     ;; Kill survivors on patches which have caught fire
@@ -181,6 +208,17 @@ to spread-fire
             ]
           ]
         ]
+      ]
+
+      ifelse gender = "female"
+      [ set female-fire-deaths female-fire-deaths + 1 ]
+      [ set male-fire-deaths male-fire-deaths + 1 ]
+
+      ifelse age = "child"
+      [ set child-fire-deaths child-fire-deaths + 1 ]
+      [ ifelse age = "adult"
+        [ set adult-fire-deaths adult-fire-deaths + 1 ]
+        [ set elderly-fire-deaths elderly-fire-deaths + 1 ]
       ]
       die
     ]
@@ -254,6 +292,18 @@ to move-normal
           ]
         ]
       ]
+
+      ifelse gender = "female"
+      [ set female-escapees female-escapees + 1 ]
+      [ set male-escapees male-escapees + 1 ]
+
+      ifelse age = "child"
+      [ set child-escapees child-escapees + 1 ]
+      [ ifelse age = "adult"
+        [ set adult-escapees adult-escapees + 1 ]
+        [ set elderly-escapees elderly-escapees + 1 ]
+      ]
+
       die
     ]
   ]
@@ -944,12 +994,12 @@ CHOOSER
 behaviour
 behaviour
 "smart" "follow"
-1
+0
 
 MONITOR
 3
 189
-71
+104
 234
 Total Escapees
 blue-escapees + cyan-escapees + yellow-escapees + red-escapees + beige-escapees + green-escapees
@@ -1033,9 +1083,9 @@ NIL
 1
 
 MONITOR
-78
+111
 189
-180
+213
 234
 Available Exits
 count doors
@@ -1119,9 +1169,9 @@ SLIDER
 43
 max-vision
 max-vision
-10
-50
-25.0
+20
+100
+50.0
 1
 1
 NIL
@@ -1144,7 +1194,7 @@ MONITOR
 258
 569
 Top speed (m/s)
-precision max [speed] of survivors 3
+precision mean [speed] of survivors 3
 17
 1
 11
@@ -1174,7 +1224,7 @@ random-fire?
 PLOT
 6
 576
-206
+250
 726
 Average panic level
 NIL
@@ -1193,6 +1243,140 @@ PENS
 "red" 1.0 0 -2674135 true "" "plot mean [ panic ] of survivors with [ color = red ]"
 "beige" 1.0 0 -204336 true "" "plot mean [ panic ] of survivors with [ color = 29 ]"
 "green" 1.0 0 -10899396 true "" "plot mean [ panic ] of survivors with [ color = green ]"
+
+BUTTON
+143
+452
+208
+487
+NIL
+go
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+PLOT
+1590
+12
+1852
+162
+Escapees by Gender
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"female" 1.0 0 -2674135 true "" "plot female-escapees"
+"male" 1.0 0 -13345367 true "" "plot male-escapees"
+
+PLOT
+1590
+475
+1855
+625
+Escapees by Age Group
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"child" 1.0 0 -2064490 true "" "plot child-escapees"
+"adult" 1.0 0 -5825686 true "" "plot adult-escapees"
+"senior" 1.0 0 -8630108 true "" "plot elderly-escapees"
+
+PLOT
+1590
+166
+1852
+316
+Fire Deaths by Gender
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"female" 1.0 0 -2674135 true "" "plot female-fire-deaths"
+"male" 1.0 0 -13345367 true "" "plot male-fire-deaths"
+
+PLOT
+1590
+319
+1855
+469
+Stampede Deaths by Gender
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"female" 1.0 0 -2674135 true "" "plot female-stampede-deaths"
+"male" 1.0 0 -13345367 true "" "plot male-stampede-deaths"
+
+PLOT
+1592
+628
+1852
+778
+Fire Deaths by Age Group
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"child" 1.0 0 -2064490 true "" "plot child-fire-deaths"
+"adult" 1.0 0 -5825686 true "" "plot adult-fire-deaths"
+"senior" 1.0 0 -8630108 true "" "plot elderly-fire-deaths"
+
+PLOT
+1593
+783
+1869
+933
+Stampede Deaths by Age Group
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"child" 1.0 0 -2064490 true "" "plot child-stampede-deaths"
+"adult" 1.0 0 -5825686 true "" "plot adult-stampede-deaths"
+"senior" 1.0 0 -8630108 true "" "plot elderly-stampede-deaths"
 
 @#$#@#$#@
 ## WHAT IS IT?
